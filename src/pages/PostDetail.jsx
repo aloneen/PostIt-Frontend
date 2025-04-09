@@ -80,8 +80,8 @@ const PostDetail = () => {
           <p>{post.content}</p>
           {currentUser && currentUser.id === post.user_id && (
             <div>
-              <button onClick={() => setIsEditing(true)}>Edit</button>
-              <button onClick={handleDelete}>Delete</button>
+              <button className='btn' onClick={() => setIsEditing(true)}>Edit</button>
+              <button className='btn' onClick={handleDelete}>Delete</button>
             </div>
           )}
           <CommentsSection postId={post.id} />
