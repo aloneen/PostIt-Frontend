@@ -30,6 +30,9 @@ const Navbar = () => {
             {currentUser.role === 'Admin' && (
               <Link to="/admin" onClick={() => setMenuOpen(false)}>Admin Panel</Link>
             )}
+            {(currentUser.role === 'Moderator' || currentUser.role === 'Admin') && (
+              <Link to="/moderator" onClick={() => setMenuOpen(false)}>Moderator Panel</Link>
+            )}
             <span>Welcome, {currentUser.username}</span>
             <button onClick={handleLogout}>Logout</button>
           </>

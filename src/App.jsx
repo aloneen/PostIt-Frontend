@@ -10,6 +10,7 @@ import CreatePost from './pages/CreatePost';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminPanel from './pages/AdminPanel';
+import ModeratorPage from './pages/ModeratorPage';
 import { loadUser } from './redux/userSlice';
 
 const App = () => {
@@ -30,6 +31,8 @@ const App = () => {
           <Route path="/posts/:id" element={<PostDetail />} />
           <Route path="/create-post" element={<PrivateRoute>{<CreatePost />}</PrivateRoute>} />
           <Route path="/admin" element={<PrivateRoute role="Admin">{<AdminPanel />}</PrivateRoute>} />
+          <Route path="/moderator" element={ <PrivateRoute role={["Moderator", "Admin"]}> <ModeratorPage /></PrivateRoute> } />
+
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>
