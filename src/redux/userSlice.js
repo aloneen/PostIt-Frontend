@@ -1,28 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-export const fetchUsers = createAsyncThunk(
-  'user/fetchUsers',
-  async (_, { rejectWithValue, getState }) => {
-    try {
-      const { token } = getState().user;
-      const res = await fetch('http://localhost:5000/users', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'Ошибка получения пользователей');
-      }
-      const data = await res.json();
-      return data;
-    } catch (err) {
-      return rejectWithValue(err.message);
-    }
-  }
-);
-
-
 export const loginUser = createAsyncThunk(
   'user/loginUser',
   async (credentials, { rejectWithValue }) => {
@@ -37,7 +14,6 @@ export const loginUser = createAsyncThunk(
         throw new Error(errorData.error || 'Ошибка входа');
       }
       const data = await res.json();
-     
       localStorage.setItem('token', data.token);
       return data;
     } catch (err) {
@@ -66,12 +42,14 @@ export const registerUser = createAsyncThunk(
 
 export const loadUser = createAsyncThunk(
   'user/loadUser',
-  async (_, { rejectWithValue, getState }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) throw new Error('Нет токена');
       const res = await fetch('http://127.0.0.1:5000/user', {
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
       if (!res.ok) throw new Error('Пользователь не авторизован');
       const data = await res.json();
@@ -82,13 +60,34 @@ export const loadUser = createAsyncThunk(
   }
 );
 
+export const fetchUsers = createAsyncThunk(
+  'user/fetchUsers',
+  async (_, { rejectWithValue, getState }) => {
+    try {
+      const token = getState().user.token;
+      const res = await fetch('http://127.0.0.1:5000/users', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Ошибка получения пользователей');
+      }
+      const data = await res.json();
+      return data; 
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
 
 export const deleteUser = createAsyncThunk(
   'user/deleteUser',
   async (userId, { rejectWithValue, getState }) => {
     try {
-      const { token } = getState().user;
-      const res = await fetch(`http://localhost:5000/users/${userId}`, {
+      const token = getState().user.token;
+      const res = await fetch(`http://127.0.0.1:5000/users/${userId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -108,6 +107,7 @@ export const deleteUser = createAsyncThunk(
 const initialState = {
   currentUser: null,
   token: localStorage.getItem('token') || null,
+  allUsers: [],
   error: null,
   loading: false,
 };
@@ -124,39 +124,27 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchUsers.fulfilled, (state, action) => {
-        state.allUsers = action.payload; 
-      })
-      .addCase(deleteUser.fulfilled, (state, action) => {
-        const userId = action.payload;
-        state.allUsers = state.allUsers.filter(u => u.id !== userId);
-      })
-      .addCase(loginUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
+      .addCase(loginUser.pending, (state) => { state.loading = true; state.error = null; })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.currentUser = action.payload.user;
-        state.token = action.payload.token;
+          state.loading = false;
+          state.currentUser = action.payload.user;
+          state.token = action.payload.token;
       })
       .addCase(loginUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+         state.loading = false;
+         state.error = action.payload;
       })
-      .addCase(registerUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+      .addCase(registerUser.pending, (state) => { state.loading = true; state.error = null; })
+      .addCase(registerUser.fulfilled, (state, action) => { state.loading = false; })
+      .addCase(registerUser.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
+      .addCase(loadUser.fulfilled, (state, action) => { state.currentUser = action.payload.user; })
+      
+      .addCase(fetchUsers.fulfilled, (state, action) => {
+         state.allUsers = action.payload;
       })
-      .addCase(registerUser.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(registerUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      .addCase(loadUser.fulfilled, (state, action) => {
-        state.currentUser = action.payload.user;
+     
+      .addCase(deleteUser.fulfilled, (state, action) => {
+         state.allUsers = state.allUsers.filter(u => u.id !== action.payload);
       });
   },
 });

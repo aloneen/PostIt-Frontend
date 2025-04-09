@@ -4,7 +4,8 @@ import { fetchUsers, deleteUser } from '../redux/userSlice';
 
 const AdminPanel = () => {
   const dispatch = useDispatch();
-  const { allUsers, error } = useSelector(state => state.user);
+  // Деструктурируем, подставляя дефолтное значение пустого массива
+  const { allUsers = [], error } = useSelector(state => state.user);
 
   useEffect(() => {
     dispatch(fetchUsers());
@@ -15,15 +16,18 @@ const AdminPanel = () => {
   };
 
   return (
-    <div>
-      <h2>Admin Panel</h2>
+    <div className="admin-panel">
+      <h2>Admin Panel - Manage Users</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      {allUsers.length > 0 ? (
+      {allUsers && allUsers.length > 0 ? (
         <ul>
           {allUsers.map(user => (
             <li key={user.id}>
               {user.username} ({user.email}) - Role: {user.role}
-              <button onClick={() => handleDelete(user.id)} style={{ color: 'red' }}>
+              <button
+                onClick={() => handleDelete(user.id)}
+                style={{ marginLeft: '10px', color: 'red' }}
+              >
                 Delete
               </button>
             </li>
