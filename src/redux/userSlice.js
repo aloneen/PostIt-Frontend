@@ -11,7 +11,7 @@ export const loginUser = createAsyncThunk(
       });
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || 'Ошибка входа');
+        throw new Error(errorData.error || 'Error login');
       }
       const data = await res.json();
       localStorage.setItem('token', data.token);
@@ -31,7 +31,7 @@ export const registerUser = createAsyncThunk(
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData)
       });
-      if (!res.ok) throw new Error('Ошибка регистрации');
+      if (!res.ok) throw new Error('Error regist');
       const data = await res.json();
       return data;
     } catch (err) {
@@ -51,7 +51,7 @@ export const loadUser = createAsyncThunk(
           'Authorization': `Bearer ${token}`
         }
       });
-      if (!res.ok) throw new Error('Пользователь не авторизован');
+      if (!res.ok) throw new Error('User not authorized');
       const data = await res.json();
       return data;
     } catch (err) {
@@ -72,7 +72,7 @@ export const fetchUsers = createAsyncThunk(
       });
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || 'Ошибка получения пользователей');
+        throw new Error(errorData.error || 'Error users receiv');
       }
       const data = await res.json();
       return data; 
@@ -95,7 +95,7 @@ export const deleteUser = createAsyncThunk(
       });
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || 'Ошибка удаления пользователя');
+        throw new Error(errorData.error || 'Error user delete');
       }
       return userId;
     } catch (err) {

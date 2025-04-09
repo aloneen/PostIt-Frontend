@@ -5,7 +5,7 @@ export const fetchPosts = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await fetch('http://127.0.0.1:5000/posts');
-      if (!res.ok) throw new Error('Ошибка получения постов');
+      if (!res.ok) throw new Error('Error: post receive');
       const data = await res.json();
       return data;
     } catch (err) {
@@ -27,7 +27,7 @@ export const createPost = createAsyncThunk(
         },
         body: JSON.stringify(postData),
       });
-      if (!res.ok) throw new Error('Ошибка создания поста');
+      if (!res.ok) throw new Error('Error: post create');
       const data = await res.json();
       return data.post;
     } catch (err) {
@@ -45,13 +45,40 @@ export const deletePost = createAsyncThunk(
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      if (!res.ok) throw new Error('Ошибка удаления поста');
+      if (!res.ok) throw new Error('Error: post delet');
       return postId;
     } catch (err) {
       return rejectWithValue(err.message);
     }
   }
 );
+
+export const updatePost = createAsyncThunk(
+  'posts/updatePost',
+  async ({ postId, title, content }, { rejectWithValue, getState }) => {
+    try {
+      const { token } = getState().user;
+      const res = await fetch(`http://127.0.0.1:5000/posts/${postId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ title, content })
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Error: post update');
+      }
+      const data = await res.json();
+      return data.post;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+
 
 const postSlice = createSlice({
   name: 'posts',
@@ -77,8 +104,15 @@ const postSlice = createSlice({
       })
       .addCase(deletePost.fulfilled, (state, action) => {
         state.posts = state.posts.filter(post => post.id !== action.payload);
+      })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        const index = state.posts.findIndex(post => post.id === action.payload.id);
+        if (index !== -1) {
+          state.posts[index] = action.payload;
+        }
       });
   },
 });
 
 export default postSlice.reducer;
+

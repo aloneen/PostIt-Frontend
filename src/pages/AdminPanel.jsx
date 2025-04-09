@@ -4,7 +4,7 @@ import { fetchUsers, deleteUser } from '../redux/userSlice';
 
 const AdminPanel = () => {
   const dispatch = useDispatch();
-  // Деструктурируем, подставляя дефолтное значение пустого массива
+  
   const { allUsers = [], error } = useSelector(state => state.user);
 
   useEffect(() => {

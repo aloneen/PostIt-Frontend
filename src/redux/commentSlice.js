@@ -5,7 +5,7 @@ export const fetchComments = createAsyncThunk(
   async (postId, { rejectWithValue }) => {
     try {
       const res = await fetch(`http://127.0.0.1:5000/posts/${postId}/comments`);
-      if (!res.ok) throw new Error('Ошибка получения комментариев');
+      if (!res.ok) throw new Error('Error comment receiv');
       const data = await res.json();
       return data;
     } catch (err) {
@@ -27,7 +27,7 @@ export const createComment = createAsyncThunk(
         },
         body: JSON.stringify({ content }),
       });
-      if (!res.ok) throw new Error('Ошибка создания комментария');
+      if (!res.ok) throw new Error('Error comment create');
       const data = await res.json();
       return data.comment;
     } catch (err) {
@@ -45,7 +45,7 @@ export const deleteComment = createAsyncThunk(
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      if (!res.ok) throw new Error('Ошибка удаления комментария');
+      if (!res.ok) throw new Error('Error comment delete');
       return commentId;
     } catch (err) {
       return rejectWithValue(err.message);
