@@ -1,48 +1,39 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchUsers, deleteUser } from '../store/userSlice'
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUsers, deleteUser } from '../redux/userSlice';
 
 const AdminPanel = () => {
-  const dispatch = useDispatch()
-  const { users, currentUser } = useSelector((state) => state.user)
+  const dispatch = useDispatch();
+  const { allUsers, error } = useSelector(state => state.user);
 
   useEffect(() => {
-    dispatch(fetchUsers())
-  }, [dispatch])
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
-  if (currentUser?.role !== 'Admin') {
-    return <h2>Access Denied</h2>
-  }
+  const handleDelete = (id) => {
+    dispatch(deleteUser(id));
+  };
 
   return (
     <div>
       <h2>Admin Panel</h2>
-      <table border="1" cellPadding="10">
-        <thead>
-          <tr>
-            <th>Username</th>
-            <th>Role</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map(u => (
-            <tr key={u.id}>
-              <td>{u.username}</td>
-              <td>{u.role}</td>
-              <td>
-                {u.id !== currentUser.id && (
-                  <button onClick={() => dispatch(deleteUser(u.id))} style={{ color: 'red' }}>
-                    Delete
-                  </button>
-                )}
-              </td>
-            </tr>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {allUsers.length > 0 ? (
+        <ul>
+          {allUsers.map(user => (
+            <li key={user.id}>
+              {user.username} ({user.email}) - Role: {user.role}
+              <button onClick={() => handleDelete(user.id)} style={{ color: 'red' }}>
+                Delete
+              </button>
+            </li>
           ))}
-        </tbody>
-      </table>
+        </ul>
+      ) : (
+        <p>No users found.</p>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default AdminPanel
+export default AdminPanel;

@@ -1,24 +1,34 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { createPost } from '../store/postSlice'
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { createPost, fetchPosts } from '../redux/postSlice';
+import { useNavigate } from 'react-router-dom';
 
 const CreatePost = () => {
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    dispatch(createPost({ title, content }))
+    e.preventDefault();
+    if (!title.trim() || !content.trim()) {
+      setError('Title и Content не могут быть пустыми');
+      return;
+    }
+    dispatch(createPost({ title: title.trim(), content: content.trim() }))
       .unwrap()
-      .then(() => navigate('/posts'))
-  }
+      .then(() => {
+        dispatch(fetchPosts());
+        navigate('/posts');
+      })
+      .catch((err) => setError(err));
+  };
 
   return (
-    <div>
+    <div className="page create-post">
       <h2>Create New Post</h2>
+      {error && <p className="error">{error}</p>}
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -36,7 +46,7 @@ const CreatePost = () => {
         <button type="submit">Post</button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default CreatePost
+export default CreatePost;

@@ -1,0 +1,163 @@
+/* Общие стили */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+body {
+  background-color: #f8f9fa;
+  color: #333;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* Navbar */
+.navbar {
+  background-color: #343a40;
+  padding: 15px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar-brand a {
+  color: #ffffff;
+  font-size: 24px;
+  text-decoration: none;
+}
+
+.navbar-toggle {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  display: none;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.navbar-links a,
+.navbar-links span,
+.navbar-links button {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.navbar-links button {
+  background-color: #dc3545;
+  border: none;
+  padding: 8px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.navbar-links button:hover {
+  background-color: #c82333;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar-toggle {
+    display: block;
+  }
+  .navbar-links {
+    flex-direction: column;
+    width: 100%;
+    display: none;
+  }
+  .navbar-links.active {
+    display: flex;
+  }
+}
+
+/* Страницы */
+.page {
+  padding: 20px;
+  background-color: #fff;
+  margin: 20px 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Post Card */
+.post-card {
+  border: 1px solid #dee2e6;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 5px;
+}
+.post-card h3 {
+  margin-bottom: 10px;
+}
+.post-card button {
+  margin-right: 10px;
+}
+
+/* Comments */
+.comments-section {
+  margin-top: 20px;
+}
+.comments-section form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+.comments-section input[type="text"] {
+  flex: 1;
+  padding: 8px;
+}
+.comments-section button {
+  padding: 8px 15px;
+}
+.comments-list .comment {
+  border-top: 1px solid #ccc;
+  padding: 10px 0;
+}
+
+/* Формы */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+}
+button[type="submit"],
+button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+button[type="submit"]:hover,
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Ошибки */
+.error {
+  color: red;
+  font-size: 14px;
+}

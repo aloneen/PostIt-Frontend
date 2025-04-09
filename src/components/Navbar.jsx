@@ -1,31 +1,47 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import { logoutUser } from '../store/userSlice'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { logoutUser } from '../redux/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Navbar = () => {
-  const { currentUser } = useSelector((state) => state.user)
-  const dispatch = useDispatch()
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    navigate('/login');
+  };
 
   return (
-    <nav style={{ display: 'flex', gap: '15px', padding: '10px', backgroundColor: '#f4f4f4' }}>
-      <Link to="/">Home</Link>
-      <Link to="/posts">Posts</Link>
-      <Link to="/create-post">Create Post</Link>
-      {currentUser?.role === 'Admin' && <Link to="/admin">Admin Panel</Link>}
-      {currentUser ? (
-        <>
-          <span>Hello, {currentUser.username}</span>
-          <button onClick={() => dispatch(logoutUser())}>Logout</button>
-        </>
-      ) : (
-        <>
-          <Link to="/login">Login</Link>
-          <Link to="/register">Register</Link>
-        </>
-      )}
+    <nav className="navbar">
+      <div className="navbar-brand">
+        <Link to="/">PostIt</Link>
+      </div>
+      <button className="navbar-toggle" onClick={() => setMenuOpen(!menuOpen)}>
+        &#9776;
+      </button>
+      <div className={`navbar-links ${menuOpen ? 'active' : ''}`}>
+        <Link to="/posts" onClick={() => setMenuOpen(false)}>Posts</Link>
+        {currentUser ? (
+          <>
+            <Link to="/create-post" onClick={() => setMenuOpen(false)}>Create Post</Link>
+            {currentUser.role === 'Admin' && (
+              <Link to="/admin" onClick={() => setMenuOpen(false)}>Admin Panel</Link>
+            )}
+            <span>Welcome, {currentUser.username}</span>
+            <button onClick={handleLogout}>Logout</button>
+          </>
+        ) : (
+          <>
+            <Link to="/login" onClick={() => setMenuOpen(false)}>Login</Link>
+            <Link to="/register" onClick={() => setMenuOpen(false)}>Register</Link>
+          </>
+        )}
+      </div>
     </nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
