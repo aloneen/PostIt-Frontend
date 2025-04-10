@@ -45,7 +45,7 @@ export const loadUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
-      if (!token) throw new Error('Нет токена');
+      if (!token) throw new Error('no token');
       const res = await fetch('http://127.0.0.1:5000/user', {
         headers: {
           'Authorization': `Bearer ${token}`

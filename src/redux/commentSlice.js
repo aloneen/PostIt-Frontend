@@ -1,12 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-// Запрос комментариев для конкретного поста (уже существующий)
 export const fetchComments = createAsyncThunk(
   'comments/fetchComments',
   async (postId, { rejectWithValue }) => {
     try {
       const res = await fetch(`http://127.0.0.1:5000/posts/${postId}/comments`);
-      if (!res.ok) throw new Error('Ошибка получения комментариев');
+      if (!res.ok) throw new Error('Error comment receive');
       const data = await res.json();
       return data;
     } catch (err) {
@@ -15,7 +14,6 @@ export const fetchComments = createAsyncThunk(
   }
 );
 
-// Новый thunk для получения всех комментариев (для модератора)
 export const fetchAllComments = createAsyncThunk(
   'comments/fetchAllComments',
   async (_, { rejectWithValue, getState }) => {
@@ -26,10 +24,10 @@ export const fetchAllComments = createAsyncThunk(
       });
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || 'Ошибка получения комментариев');
+        throw new Error(errorData.error || 'Error comments receive');
       }
       const data = await res.json();
-      return data; // ожидается массив комментариев
+      return data; 
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -49,7 +47,7 @@ export const createComment = createAsyncThunk(
         },
         body: JSON.stringify({ content }),
       });
-      if (!res.ok) throw new Error('Ошибка создания комментария');
+      if (!res.ok) throw new Error('Error comment create');
       const data = await res.json();
       return data.comment;
     } catch (err) {
@@ -67,7 +65,7 @@ export const deleteComment = createAsyncThunk(
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      if (!res.ok) throw new Error('Ошибка удаления комментария');
+      if (!res.ok) throw new Error('Error comment delete');
       return commentId;
     } catch (err) {
       return rejectWithValue(err.message);

@@ -16,7 +16,7 @@ const CommentsSection = ({ postId }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!commentText.trim()) {
-      setError('Комментарий не может быть пустым');
+      setError('Comment required');
       return;
     }
     dispatch(createComment({ post_id: postId, content: commentText }))

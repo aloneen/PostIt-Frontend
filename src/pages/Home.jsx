@@ -5,7 +5,6 @@ import '../style.css';
 const Home = () => {
   return (
     <div className="home">
-      {/* Герой-секция */}
       <div className="hero-banner">
         <div className="hero-overlay">
           <div className="hero-content">
@@ -20,7 +19,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Информационная секция */}
+
       <div className="info-section container">
         <h2>What is PostIt?</h2>
         <p>
@@ -36,7 +35,6 @@ const Home = () => {
         </ul>
       </div>
 
-      {/* Credits - разработчики */}
       <div className="credits container">
         <p>Developed by <strong>Seisenbek Dias</strong> and <strong>Suleimenov Dinmukhamed</strong></p>
       </div>

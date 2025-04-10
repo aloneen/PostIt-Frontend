@@ -13,7 +13,7 @@ const CreatePost = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!title.trim() || !content.trim()) {
-      setError('Title и Content не могут быть пустыми');
+      setError('Fill the gaps');
       return;
     }
     dispatch(createPost({ title: title.trim(), content: content.trim() }))

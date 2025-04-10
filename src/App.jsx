@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Navbar from './components/Navbar';
-import PrivateRoute from './components/PrivateRoute';
 import Home from './pages/Home';
 import Posts from './pages/Posts';
 import PostDetail from './pages/PostDetail';
@@ -22,22 +21,28 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <div>
-      <Navbar />
-      <div className="container">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/posts" element={<Posts />} />
-          <Route path="/posts/:id" element={<PostDetail />} />
-          <Route path="/create-post" element={<PrivateRoute>{<CreatePost />}</PrivateRoute>} />
-          <Route path="/admin" element={<PrivateRoute role="Admin">{<AdminPanel />}</PrivateRoute>} />
-          <Route path="/moderator" element={ <PrivateRoute role={["Moderator", "Admin"]}> <ModeratorPage /></PrivateRoute> } />
-
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
+    <BrowserRouter>
+      <div>
+        <Navbar />
+        <div className="container">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/posts" element={<Posts />} />
+            <Route path="/posts/:id" element={<PostDetail />} />
+            <Route path="/create-post" element={currentUser ? <CreatePost /> : <Navigate to="/login" />} />
+            <Route path="/admin" element={ currentUser && currentUser.role === 'Admin' ? ( <AdminPanel /> ) : ( <Navigate to="/" /> )}/>
+            <Route path="/moderator" element={ currentUser && (currentUser.role === 'Moderator' || currentUser.role === 'Admin') ? (
+                  <ModeratorPage />
+                ) : (
+                  <Navigate to="/" />
+                )
+              }/>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Routes>
+        </div>
       </div>
-    </div>
+    </BrowserRouter>
   );
 };
 
