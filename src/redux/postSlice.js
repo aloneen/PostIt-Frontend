@@ -109,6 +109,29 @@ export const deletePost = createAsyncThunk(
   }
 );
 
+export const deletePostImage = createAsyncThunk(
+  'posts/deletePostImage',
+  async ({ postId, imageId }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().user.token;
+      const res = await fetch(
+        `http://127.0.0.1:5000/posts/${postId}/images/${imageId}`,
+        {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      if (!res.ok) {
+        const { error } = await res.json();
+        throw new Error(error || 'Error deleting image');
+      }
+      return { postId, imageId };
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
 const postSlice = createSlice({
   name: 'posts',
   initialState: {
@@ -132,10 +155,6 @@ const postSlice = createSlice({
       .addCase(createPost.fulfilled, (state, action) => {
         state.posts.push(action.payload);
       })
-      .addCase(updatePost.fulfilled, (state, action) => {
-        const idx = state.posts.findIndex(p => p.id === action.payload.id);
-        if (idx !== -1) state.posts[idx] = action.payload;
-      })
       .addCase(deletePost.fulfilled, (state, action) => {
         state.posts = state.posts.filter(p => p.id !== action.payload);
       })
@@ -143,6 +162,18 @@ const postSlice = createSlice({
         const { postId, images } = action.payload;
         const post = state.posts.find(p => p.id === postId);
         if (post) post.images = images;
+      })
+      .addCase(updatePost.fulfilled, (state, { payload }) => {
+        // payload should be the full updated post
+        const idx = state.posts.findIndex(p => p.id === payload.id);
+        if (idx !== -1) state.posts[idx] = payload;
+      })
+      .addCase(deletePostImage.fulfilled, (state, { payload }) => {
+        const { postId, imageId } = payload;
+        const post = state.posts.find(p => p.id === postId);
+        if (post) {
+          post.images = post.images.filter(img => img.id !== imageId);
+        }
       });
   }
 });
