@@ -85,6 +85,33 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+export const changeUserRole = createAsyncThunk(
+  'user/changeUserRole',
+  async ({ userId, role }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().user.token;
+      const res = await fetch(`http://127.0.0.1:5000/users/${userId}/role`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ role })
+      });
+      if (!res.ok) {
+        const { error } = await res.json();
+        throw new Error(error || 'Error changing role');
+      }
+      return { userId, role };
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+
+
+
 export const loadUser = createAsyncThunk(
   'user/loadUser',
   async (_, { rejectWithValue }) => {
@@ -198,6 +225,10 @@ const userSlice = createSlice({
       .addCase(uploadAvatar.fulfilled, (state, action) => {
         if (state.profile) state.profile.avatar_url = action.payload;
         if (state.user)    state.user.avatar_url    = action.payload;
+      })
+      .addCase(changeUserRole.fulfilled, (state, { payload }) => {
+        const idx = state.allUsers.findIndex(u => u.id === payload.userId);
+        if (idx !== -1) state.allUsers[idx].role = payload.role;
       });
   },
 });
