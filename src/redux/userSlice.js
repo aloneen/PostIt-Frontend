@@ -176,6 +176,32 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
+
+
+export const setUserActive = createAsyncThunk(
+  'user/setUserActive',
+  async ({ userId, is_active }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().user.token;
+      const res = await fetch(`http://127.0.0.1:5000/users/${userId}/active`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ is_active })
+      });
+      if (!res.ok) {
+        const { error } = await res.json();
+        throw new Error(error || 'Error updating status');
+      }
+      return { userId, is_active };
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
 const initialState = {
   currentUser: null,
   token: localStorage.getItem('token') || null,
@@ -229,6 +255,10 @@ const userSlice = createSlice({
       .addCase(changeUserRole.fulfilled, (state, { payload }) => {
         const idx = state.allUsers.findIndex(u => u.id === payload.userId);
         if (idx !== -1) state.allUsers[idx].role = payload.role;
+      })
+      .addCase(setUserActive.fulfilled, (state, { payload }) => {
+        const u = state.allUsers.find(u => u.id === payload.userId);
+        if (u) u.is_active = payload.is_active;
       });
   },
 });
