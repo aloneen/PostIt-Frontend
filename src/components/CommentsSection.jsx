@@ -4,8 +4,8 @@ import { fetchComments, createComment, deleteComment } from '../redux/commentSli
 
 const CommentsSection = ({ postId }) => {
   const dispatch = useDispatch();
-  const { comments } = useSelector((state) => state.comments);
-  const { currentUser } = useSelector((state) => state.user);
+  const { comments } = useSelector(state => state.comments);
+  const { currentUser } = useSelector(state => state.user);
   const [commentText, setCommentText] = useState('');
   const [error, setError] = useState(null);
 
@@ -13,7 +13,7 @@ const CommentsSection = ({ postId }) => {
     dispatch(fetchComments(postId));
   }, [dispatch, postId]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
     if (!commentText.trim()) {
       setError('Comment required');
@@ -22,14 +22,9 @@ const CommentsSection = ({ postId }) => {
     dispatch(createComment({ post_id: postId, content: commentText }))
       .unwrap()
       .then(() => {
-        setCommentText('');
-        setError(null);
+        setCommentText(''); setError(null);
       })
-      .catch((err) => setError(err));
-  };
-
-  const handleDelete = (id) => {
-    dispatch(deleteComment(id));
+      .catch(err => setError(err));
   };
 
   return (
@@ -41,8 +36,7 @@ const CommentsSection = ({ postId }) => {
             type="text"
             placeholder="Add a comment..."
             value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-            required
+            onChange={e => setCommentText(e.target.value)}
           />
           <button type="submit">Send</button>
           {error && <p className="error">{error}</p>}
@@ -51,12 +45,23 @@ const CommentsSection = ({ postId }) => {
         <p>Please log in to add a comment.</p>
       )}
       <div className="comments-list">
-        {comments.map((c) => (
-          <div key={c.id} className="comment">
-            <p>{c.content}</p>
-            <small>By: {c.user_username}</small>
+        {comments.map(c => (
+          <div key={c.id} className="comment" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {c.user_avatar && (
+              <img
+                src={c.user_avatar}
+                alt={`${c.user_username}'s avatar`}
+                style={{ width: 32, height: 32, borderRadius: '50%' }}
+              />
+            )}
+            <div>
+              <p>{c.content}</p>
+              <small>By: {c.user_username}</small>
+            </div>
             {(currentUser?.role === 'Admin' || currentUser?.id === c.user_id) && (
-              <button className="btn-delete" onClick={() => handleDelete(c.id)}>Delete</button>
+              <button className="btn-delete" onClick={() => dispatch(deleteComment(c.id))}>
+                Delete
+              </button>
             )}
           </div>
         ))}
