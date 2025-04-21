@@ -1,6 +1,7 @@
+// src/pages/CreatePost.jsx
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createPost } from '../redux/postSlice';
+import { createPost, uploadPostImages } from '../redux/postSlice';
 import { fetchCategories } from '../redux/categorySlice';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,14 +11,25 @@ const CreatePost = () => {
   const { categories, loading: catLoading } = useSelector(state => state.categories);
   const { currentUser } = useSelector(state => state.user);
 
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [title, setTitle]             = useState('');
+  const [content, setContent]         = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [error, setError] = useState(null);
+  const [files, setFiles]             = useState([]);
+  const [error, setError]             = useState(null);
 
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
+
+  if (!currentUser) {
+    navigate('/login');
+    return null;
+  }
+
+  const handleFileChange = (e) => {
+    // convert FileList to Array
+    setFiles(Array.from(e.target.files));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,28 +37,35 @@ const CreatePost = () => {
       setError('Fill all fields');
       return;
     }
+
     try {
-      await dispatch(createPost({
-        title: title.trim(),
-        content: content.trim(),
-        category_id: selectedCategory
+      // 1) Create the post
+      const result = await dispatch(createPost({
+        title:         title.trim(),
+        content:       content.trim(),
+        category_id:   selectedCategory
       })).unwrap();
+
+      // extract the new post's ID
+      const postId = result.post.id;
+
+      // 2) Upload images if any
+      if (files.length) {
+        await dispatch(uploadPostImages({ postId, images: files })).unwrap();
+      }
+
+      // 3) Redirect back to posts
       navigate('/posts');
     } catch (err) {
       setError(err);
     }
   };
 
-  if (!currentUser) {
-    navigate('/login');
-    return null;
-  }
-
   return (
     <div className="page create-post">
       <h2>Create New Post</h2>
       {error && <p className="error">{error}</p>}
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
         <input
           type="text"
           placeholder="Title"
@@ -73,6 +92,12 @@ const CreatePost = () => {
               ))
           }
         </select>
+        <input
+          type="file"
+          multiple
+          accept="image/*"
+          onChange={handleFileChange}
+        />
         <button type="submit">Post</button>
       </form>
     </div>

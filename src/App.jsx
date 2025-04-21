@@ -11,6 +11,7 @@ import Register from './pages/Register';
 import AdminPanel from './pages/AdminPanel';
 import ModeratorPage from './pages/ModeratorPage';
 import { loadUser } from './redux/userSlice';
+import ProfilePage from './pages/ProfilePage';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -39,6 +40,7 @@ const App = () => {
               }/>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/profile" element={currentUser ? <ProfilePage /> : <Navigate to="/login" />} />
           </Routes>
         </div>
       </div>

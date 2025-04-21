@@ -1,5 +1,50 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
+export const fetchProfile = createAsyncThunk(
+  'user/fetchProfile',
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().user.token;
+      const res = await fetch('http://127.0.0.1:5000/user/profile', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) {
+        const { error } = await res.json();
+        throw new Error(error || 'Error fetching profile');
+      }
+      return await res.json(); // { user: {...}, posts: [...] }
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+// Thunk to upload user avatar
+export const uploadAvatar = createAsyncThunk(
+  'user/uploadAvatar',
+  async (file, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().user.token;
+      const formData = new FormData();
+      formData.append('avatar', file);
+      const res = await fetch('http://127.0.0.1:5000/user/avatar', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData
+      });
+      if (!res.ok) {
+        const { error } = await res.json();
+        throw new Error(error || 'Error uploading avatar');
+      }
+      const data = await res.json(); // { avatar_url }
+      return data.avatar_url;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+
 export const loginUser = createAsyncThunk(
   'user/loginUser',
   async (credentials, { rejectWithValue }) => {
@@ -145,6 +190,14 @@ const userSlice = createSlice({
      
       .addCase(deleteUser.fulfilled, (state, action) => {
          state.allUsers = state.allUsers.filter(u => u.id !== action.payload);
+      })
+      .addCase(fetchProfile.fulfilled, (state, action) => {
+        state.profile   = action.payload.user;
+        state.userPosts = action.payload.posts;
+      })
+      .addCase(uploadAvatar.fulfilled, (state, action) => {
+        if (state.profile) state.profile.avatar_url = action.payload;
+        if (state.user)    state.user.avatar_url    = action.payload;
       });
   },
 });

@@ -27,6 +27,16 @@ const PostCard = ({ post }) => {
 
   return (
     <div className="post-card">
+
+      {post.images && post.images[0] && (
+        <img
+          src={post.images[0]}
+          alt="Thumbnail"
+          style={{ width: '100%', height: 'auto', marginBottom: '8px', borderRadius: '4px' }}
+        />
+      )}
+
+
       <h3>{post.title}</h3>
       <p>{post.content}</p>
       <div style={{ marginBottom: '0.5rem' }}>
