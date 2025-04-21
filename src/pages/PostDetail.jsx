@@ -97,6 +97,7 @@ const PostDetail = () => {
         await dispatch(uploadPostImages({ postId: post.id, images: filesToAdd })).unwrap();
       }
       setIsEditing(false);
+      dispatch(fetchPosts());
     } catch (err) {
       setError(err);
     }
