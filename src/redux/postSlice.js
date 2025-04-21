@@ -5,9 +5,11 @@ export const fetchPosts = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await fetch('http://127.0.0.1:5000/posts');
-      if (!res.ok) throw new Error('Error: post receive');
-      const data = await res.json();
-      return data;
+      if (!res.ok) {
+        const { error } = await res.json();
+        throw new Error(error || 'Error loading posts');
+      }
+      return await res.json(); // include category_id in each post object
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -16,37 +18,22 @@ export const fetchPosts = createAsyncThunk(
 
 export const createPost = createAsyncThunk(
   'posts/createPost',
-  async (postData, { rejectWithValue, getState }) => {
+  async ({ title, content, category_id }, { getState, rejectWithValue }) => {
     try {
-      const { token } = getState().user;
+      const token = getState().user.token;
       const res = await fetch('http://127.0.0.1:5000/posts', {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(postData),
+        body: JSON.stringify({ title, content, category_id })
       });
-      if (!res.ok) throw new Error('Error: post create');
-      const data = await res.json();
-      return data.post;
-    } catch (err) {
-      return rejectWithValue(err.message);
-    }
-  }
-);
-
-export const deletePost = createAsyncThunk(
-  'posts/deletePost',
-  async (postId, { rejectWithValue, getState }) => {
-    try {
-      const { token } = getState().user;
-      const res = await fetch(`http://127.0.0.1:5000/posts/${postId}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error('Error: post delet');
-      return postId;
+      if (!res.ok) {
+        const { error } = await res.json();
+        throw new Error(error || 'Error creating post');
+      }
+      return await res.json();
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -55,64 +42,79 @@ export const deletePost = createAsyncThunk(
 
 export const updatePost = createAsyncThunk(
   'posts/updatePost',
-  async ({ postId, title, content }, { rejectWithValue, getState }) => {
+  async ({ postId, title, content, category_id }, { getState, rejectWithValue }) => {
     try {
-      const { token } = getState().user;
+      const token = getState().user.token;
       const res = await fetch(`http://127.0.0.1:5000/posts/${postId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ title, content })
+        body: JSON.stringify({ title, content, category_id })
       });
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'Error: post update');
+        const { error } = await res.json();
+        throw new Error(error || 'Error updating post');
       }
-      const data = await res.json();
-      return data.post;
+      return await res.json();
     } catch (err) {
       return rejectWithValue(err.message);
     }
   }
 );
 
-
+export const deletePost = createAsyncThunk(
+  'posts/deletePost',
+  async (postId, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().user.token;
+      const res = await fetch(`http://127.0.0.1:5000/posts/${postId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) {
+        const { error } = await res.json();
+        throw new Error(error || 'Error deleting post');
+      }
+      return postId;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
 
 const postSlice = createSlice({
   name: 'posts',
   initialState: {
     posts: [],
     status: 'idle',
-    error: null,
+    error: null
   },
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: builder => {
     builder
-      .addCase(fetchPosts.pending, (state) => { state.status = 'loading'; })
+      .addCase(fetchPosts.pending, state => {
+        state.status = 'loading'; state.error = null;
+      })
       .addCase(fetchPosts.fulfilled, (state, action) => {
-        state.posts = action.payload;
         state.status = 'succeeded';
+        state.posts = action.payload;
       })
       .addCase(fetchPosts.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
+        state.status = 'failed'; state.error = action.payload;
       })
       .addCase(createPost.fulfilled, (state, action) => {
-        state.posts.unshift(action.payload);
-      })
-      .addCase(deletePost.fulfilled, (state, action) => {
-        state.posts = state.posts.filter(post => post.id !== action.payload);
+        state.posts.push(action.payload);
       })
       .addCase(updatePost.fulfilled, (state, action) => {
-        const index = state.posts.findIndex(post => post.id === action.payload.id);
-        if (index !== -1) {
-          state.posts[index] = action.payload;
-        }
+        const idx = state.posts.findIndex(p => p.id === action.payload.id);
+        if (idx !== -1) state.posts[idx] = action.payload;
+      })
+      .addCase(deletePost.fulfilled, (state, action) => {
+        state.posts = state.posts.filter(p => p.id !== action.payload);
       });
-  },
+  }
 });
 
 export default postSlice.reducer;
-
