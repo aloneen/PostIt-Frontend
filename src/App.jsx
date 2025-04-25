@@ -13,6 +13,10 @@ import ModeratorPage from './pages/ModeratorPage';
 import { loadUser } from './redux/userSlice';
 import ProfilePage from './pages/ProfilePage';
 
+
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 const App = () => {
   const dispatch = useDispatch();
   const { currentUser } = useSelector(state => state.user);
@@ -44,6 +48,13 @@ const App = () => {
           </Routes>
         </div>
       </div>
+
+      <ToastContainer 
+        position="top-right" 
+        autoClose={3000} 
+        hideProgressBar={false} 
+        pauseOnHover 
+      />
     </BrowserRouter>
   );
 };

@@ -16,6 +16,9 @@ import {
 import { fetchCategories } from '../redux/categorySlice';
 import CommentsSection from '../components/CommentsSection';
 
+
+import { toast } from 'react-toastify'
+
 const PostDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -67,7 +70,11 @@ const PostDetail = () => {
     dispatch(deletePost(post.id))
       .unwrap()
       .then(() => navigate('/posts'))
-      .catch(err => setError(err));
+      .then(() => {
+        toast.success('Post deleted')
+      })
+      .catch(err => {
+        toast.error('Failed to delete post: ' + err)});
   };
 
   const handleImageDelete = (imageId) => {
