@@ -4,6 +4,12 @@ import { createPost, uploadPostImages } from '../redux/postSlice';
 import { fetchCategories } from '../redux/categorySlice';
 import { useNavigate } from 'react-router-dom';
 
+
+import { toast }                                from 'react-toastify';
+
+
+
+
 const CreatePost = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -15,6 +21,7 @@ const CreatePost = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [files, setFiles]             = useState([]);
   const [error, setError]             = useState(null);
+
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -54,6 +61,7 @@ const CreatePost = () => {
       }
 
       // 3) Redirect back to posts
+      toast.success("Post created");
       navigate('/posts');
     } catch (err) {
       setError(err);

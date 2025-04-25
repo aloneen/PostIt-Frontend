@@ -1,14 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { deletePost } from '../redux/postSlice';
 import { likePost, unlikePost, fetchLikes } from '../redux/likeSlice';
 import { useNavigate } from 'react-router-dom';
+
+
+import ConfirmationModal                 from './ConfirmationModal';
+import { toast }                         from 'react-toastify';
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { currentUser } = useSelector(s => s.user);
   const likeEntry = useSelector(s => s.likes.byPost[post.id]) || { count: 0, liked: false };
+
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   useEffect(() => {
     dispatch(fetchLikes(post.id));
@@ -23,6 +29,18 @@ const PostCard = ({ post }) => {
     likeEntry.liked
       ? dispatch(unlikePost(post.id))
       : dispatch(likePost(post.id));
+  };
+
+
+  const handleDelete = () => {
+    dispatch(deletePost(post.id))
+      .unwrap()
+      .then(() => {
+        toast.success('Post deleted');
+      })
+      .catch(err => {
+        toast.error('Failed to delete post: ' + err);
+      });
   };
 
   return (
@@ -48,11 +66,29 @@ const PostCard = ({ post }) => {
       </div>
 
       <button onClick={() => navigate(`/posts/${post.id}`)}>View</button>
+      
+
       {currentUser?.role === 'Admin' && (
-        <button className="btn-delete" onClick={() => dispatch(deletePost(post.id))}>
-          Delete
-        </button>
+        <>
+          <button 
+            className="btn btn-delete"
+            onClick={() => setConfirmOpen(true)}
+          >
+            Delete
+          </button>
+          <ConfirmationModal
+            isOpen={confirmOpen}
+            title="Delete this post?"
+            message="This action cannot be undone."
+            onCancel={() => setConfirmOpen(false)}
+            onConfirm={() => {
+              setConfirmOpen(false);
+              handleDelete();
+            }}
+          />
+        </>
       )}
+      
     </div>
   );
 };

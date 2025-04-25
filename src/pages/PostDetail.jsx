@@ -17,6 +17,11 @@ import { fetchCategories } from '../redux/categorySlice';
 import CommentsSection from '../components/CommentsSection';
 
 
+
+import ConfirmationModal from '../components/ConfirmationModal';
+
+
+
 import { toast } from 'react-toastify'
 
 const PostDetail = () => {
@@ -38,14 +43,18 @@ const PostDetail = () => {
   const [filesToAdd, setFilesToAdd] = useState([]);
   const [error, setError] = useState(null);
 
-  // initial load
+
+
+
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
   useEffect(() => {
     if (!posts.length && status === 'idle') dispatch(fetchPosts());
     dispatch(fetchLikes(id));
     dispatch(fetchCategories());
   }, [dispatch, id, posts.length, status]);
 
-  // populate edit form
+
   useEffect(() => {
     if (post) {
       setTitle(post.title);
@@ -203,9 +212,28 @@ const PostDetail = () => {
           {currentUser?.id === post.user_id && (
             <div>
               <button onClick={() => setIsEditing(true)}>Edit</button>
-              <button onClick={handleDelete}>Delete</button>
+              <button onClick={() => setConfirmDelete(true)}>Delete</button>
+
+
+
+              <ConfirmationModal
+                isOpen={confirmDelete}
+                title="Delete this post?"
+                message="This action cannot be undone."
+                onCancel={() => setConfirmDelete(false)}
+                onConfirm={() => {
+                  setConfirmDelete(false);
+                  handleDelete();
+                }}
+              />
             </div>
           )}
+
+
+
+
+
+
           <CommentsSection postId={post.id} />
         </>
       )}

@@ -2,12 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchComments, createComment, deleteComment } from '../redux/commentSlice';
 
+import ConfirmationModal                    from './ConfirmationModal';
+import { toast }                            from 'react-toastify';
+
 const CommentsSection = ({ postId }) => {
   const dispatch = useDispatch();
   const { comments } = useSelector(state => state.comments);
   const { currentUser } = useSelector(state => state.user);
   const [commentText, setCommentText] = useState('');
   const [error, setError] = useState(null);
+
+
+  const [confirmId, setConfirmId]     = useState(null);
 
   useEffect(() => {
     dispatch(fetchComments(postId));
@@ -22,9 +28,27 @@ const CommentsSection = ({ postId }) => {
     dispatch(createComment({ post_id: postId, content: commentText }))
       .unwrap()
       .then(() => {
-        setCommentText(''); setError(null);
+        setCommentText('');
+        setError(null);
+        toast.success('Comment posted');
       })
-      .catch(err => setError(err));
+      .catch(err => {
+        setError(err);
+        toast.error('Failed to post comment: ' + err);
+      });
+  };
+
+
+
+  const handleDelete = id => {
+    dispatch(deleteComment(id))
+      .unwrap()
+      .then(() => {
+        toast.success('Comment deleted');
+      })
+      .catch(err => {
+        toast.error('Failed to delete comment: ' + err);
+      });
   };
 
   return (
@@ -58,10 +82,24 @@ const CommentsSection = ({ postId }) => {
               <p>{c.content}</p>
               <small>By: {c.user_username}</small>
             </div>
-            {(currentUser?.role === 'Admin' || currentUser?.id === c.user_id) && (
-              <button className="btn-delete" onClick={() => dispatch(deleteComment(c.id))}>
-                Delete
-              </button>
+             {(currentUser?.role === 'Admin' || currentUser?.id === c.user_id) && (
+              <>
+                <button 
+                  className="btn btn-delete"
+                  onClick={() => setConfirmId(c.id)}
+                >
+                  Delete
+                </button>
+                <ConfirmationModal
+                  isOpen={confirmId === c.id}
+                  title="Delete this comment?"
+                  onCancel={() => setConfirmId(null)}
+                  onConfirm={() => {
+                    handleDelete(c.id);
+                    setConfirmId(null);
+                  }}
+                />
+              </>
             )}
           </div>
         ))}

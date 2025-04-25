@@ -7,6 +7,12 @@ import {
   deleteCategory
 } from '../redux/categorySlice';
 
+
+
+import { toast } from 'react-toastify';
+import ConfirmationModal from '../components/ConfirmationModal';
+
+
 const ModeratorPage = () => {
   const dispatch = useDispatch();
   const { allComments = [], error: commentError } = useSelector(s => s.comments);
@@ -14,13 +20,25 @@ const ModeratorPage = () => {
 
   const [newCatName, setNewCatName] = useState('');
 
+
+
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [confirmDeleteComment, setConfirmDeleteComment] = useState(false);
+
   useEffect(() => {
     dispatch(fetchAllComments());
     dispatch(fetchCategories());
   }, [dispatch]);
 
   const handleDeleteComment = (id) => {
-    dispatch(deleteComment(id)).unwrap().catch(console.error);
+    dispatch(deleteComment(id))
+      .unwrap()
+      .then(() => {
+        toast.success('Comment deleted');
+      })
+      .catch(err => {
+        toast.error('Failed to delete commment: ' + err);
+      });
   };
 
   const handleCreateCategory = e => {
@@ -28,12 +46,24 @@ const ModeratorPage = () => {
     if (!newCatName.trim()) return;
     dispatch(createCategory({ name: newCatName.trim() }))
       .unwrap()
-      .then(() => setNewCatName(''))
-      .catch(console.error);
+      .then(() => {
+        toast.success('Category created')
+        setNewCatName('')
+      })
+      .catch(err => {
+        toast.error('Failed to create Category');
+      });
   };
 
   const handleDeleteCategory = id => {
-    dispatch(deleteCategory(id)).unwrap().catch(console.error);
+    dispatch(deleteCategory(id))
+      .unwrap()
+      .then(() => {
+        toast.success('Category deleted');
+      })
+      .catch(err => {
+        toast.error('Failed to delete category: ' + err);
+      });
   };
 
   return (
@@ -54,11 +84,24 @@ const ModeratorPage = () => {
                 </small>
                 <br />
                 <button
-                  onClick={() => handleDeleteComment(c.id)}
+                  onClick={() => setConfirmDeleteComment(true)}
                   style={{ marginTop: '5px', color: 'red' }}
                 >
                   Delete
                 </button>
+
+                <ConfirmationModal
+                  isOpen={confirmDeleteComment}
+                  title="Delete this comment?"
+                  message="This action cannot be undone."
+                  onCancel={() => setConfirmDeleteComment(false)}
+                  onConfirm={() => {
+                    setConfirmDeleteComment(false);
+                    handleDeleteComment(c.id);
+                  }}
+                />
+
+
               </li>
             ))}
           </ul>
@@ -101,11 +144,23 @@ const ModeratorPage = () => {
               >
                 {cat.name}
                 <button
-                  onClick={() => handleDeleteCategory(cat.id)}
+                  onClick={() => setConfirmDelete(true)}
                   style={{ color: 'red' }}
                 >
                   Delete
                 </button>
+
+                <ConfirmationModal
+                  isOpen={confirmDelete}
+                  title="Delete this category??"
+                  message="This action cannot be undone."
+                  onCancel={() => setConfirmDelete(false)}
+                  onConfirm={() => {
+                    setConfirmDelete(false);
+                    handleDeleteCategory(cat.id);
+                  }}
+                />
+
               </li>
             ))}
           </ul>
