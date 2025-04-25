@@ -12,7 +12,7 @@ export const fetchProfile = createAsyncThunk(
         const { error } = await res.json();
         throw new Error(error || 'Error fetching profile');
       }
-      return await res.json(); // { user: {...}, posts: [...] }
+      return await res.json(); 
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -44,6 +44,30 @@ export const uploadAvatar = createAsyncThunk(
   }
 );
 
+
+export const updateProfile = createAsyncThunk(
+  'user/updateProfile',
+  async ({ username, email }, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().user.token;
+      const res = await fetch('http://127.0.0.1:5000/user/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ username, email })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Error updating profile');
+      }
+      return data.user;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
 
 export const loginUser = createAsyncThunk(
   'user/loginUser',
@@ -206,6 +230,8 @@ const initialState = {
   currentUser: null,
   token: localStorage.getItem('token') || null,
   allUsers: [],
+  // profile: null,     
+  // userPosts: [],   
   error: null,
   loading: false,
 };
@@ -259,6 +285,18 @@ const userSlice = createSlice({
       .addCase(setUserActive.fulfilled, (state, { payload }) => {
         const u = state.allUsers.find(u => u.id === payload.userId);
         if (u) u.is_active = payload.is_active;
+      })
+      .addCase(updateProfile.pending, state => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.currentUser = payload;
+      })
+      .addCase(updateProfile.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload;
       });
   },
 });

@@ -38,7 +38,7 @@ const App = () => {
                   <Navigate to="/" />
                 )
               }/>
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={currentUser ? <Posts /> : <Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={currentUser ? <ProfilePage /> : <Navigate to="/login" />} />
           </Routes>

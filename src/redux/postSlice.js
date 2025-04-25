@@ -17,7 +17,7 @@ export const uploadPostImages = createAsyncThunk(
         const { error } = await res.json();
         throw new Error(error || 'Error uploading images');
       }
-      const data = await res.json(); // { images: [url, ...] }
+      const data = await res.json();
       return { postId, images: data.images };
     } catch (err) {
       return rejectWithValue(err.message);
@@ -34,7 +34,7 @@ export const fetchPosts = createAsyncThunk(
         const { error } = await res.json();
         throw new Error(error || 'Error loading posts');
       }
-      return await res.json(); // include category_id in each post object
+      return await res.json(); 
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -164,7 +164,6 @@ const postSlice = createSlice({
         if (post) post.images = images;
       })
       .addCase(updatePost.fulfilled, (state, { payload }) => {
-        // payload should be the full updated post
         const idx = state.posts.findIndex(p => p.id === payload.id);
         if (idx !== -1) state.posts[idx] = payload;
       })

@@ -1,4 +1,3 @@
-// src/redux/categorySlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // Fetch all categories
