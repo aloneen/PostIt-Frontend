@@ -72,7 +72,7 @@ const CreatePost = () => {
     <div className="page create-post">
       <h2>Create New Post</h2>
       {error && <p className="error">{error}</p>}
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Title"
