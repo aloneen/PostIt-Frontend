@@ -40,10 +40,7 @@ const PostCard = ({ post }) => {
 
   return (
     <>
-      <div
-        className="post-card"
-        onClick={() => navigate(`/posts/${post.id}`)}
-      >
+      <div className="post-card" onClick={() => navigate(`/posts/${post.id}`)}>
         {post.images?.[0] && (
           <div className="post-card-image">
             <img src={post.images[0].url} alt={post.title} className="post-thumbnail"/>

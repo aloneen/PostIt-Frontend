@@ -7,11 +7,11 @@ import './Posts.css';
 
 const Posts = () => {
   const dispatch = useDispatch();
-  const { posts, status, error }          = useSelector(s => s.posts);
+  const { posts, status, error } = useSelector(s => s.posts);
   const { categories, loading: catLoading } = useSelector(s => s.categories);
 
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [searchTitle, setSearchTitle]           = useState('');
+  const [searchTitle, setSearchTitle] = useState('');
 
   useEffect(() => {
     dispatch(fetchPosts());
@@ -44,18 +44,11 @@ const Posts = () => {
 
 
       <div className="posts-page__filter">
-        <button
-          className={`pill ${selectedCategory === '' ? 'pill--active' : ''}`}
-          onClick={() => setSelectedCategory('')}
-        >All</button>
+        <button className={`pill ${selectedCategory === '' ? 'pill--active' : ''}`} onClick={() => setSelectedCategory('')}>All</button>
         {catLoading
           ? <span className="pill pill--loading">Loading…</span>
           : categories.map(c => (
-              <button
-                key={c.id}
-                className={`pill ${String(c.id) === selectedCategory ? 'pill--active' : ''}`}
-                onClick={() => setSelectedCategory(String(c.id))}
-              >
+              <button key={c.id} className={`pill ${String(c.id) === selectedCategory ? 'pill--active' : ''}`} onClick={() => setSelectedCategory(String(c.id))}>
                 {c.name}
               </button>
             ))

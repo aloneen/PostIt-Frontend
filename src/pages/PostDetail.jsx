@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState, useRef } from 'react';
+import { useParams, useNavigate }            from 'react-router-dom';
+import { useDispatch, useSelector }          from 'react-redux';
 import {
   fetchPosts,
   deletePost,
@@ -8,53 +8,44 @@ import {
   uploadPostImages,
   deletePostImage
 } from '../redux/postSlice';
-import {
-  fetchLikes,
-  likePost,
-  unlikePost
-} from '../redux/likeSlice';
-import { fetchCategories } from '../redux/categorySlice';
-import CommentsSection from '../components/CommentsSection';
-
-
-
-import ConfirmationModal from '../components/ConfirmationModal';
-
-
-
-import { toast } from 'react-toastify'
+import { fetchLikes, likePost, unlikePost }  from '../redux/likeSlice';
+import { fetchCategories }                   from '../redux/categorySlice';
+import { FaHeart, FaEllipsisV }              from 'react-icons/fa';
+import ConfirmationModal                     from '../components/ConfirmationModal';
+import CommentsSection                       from '../components/CommentsSection';
+import { toast }                             from 'react-toastify';
+import './PostDetail.css';
 
 const PostDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { posts, status } = useSelector(state => state.posts);
-  const { categories, loading: catLoading } = useSelector(state => state.categories);
-  const { currentUser } = useSelector(state => state.user);
-  const likeEntry = useSelector(state => state.likes.byPost[id]) || { count: 0, liked: false };
+  const { posts, status }        = useSelector(s => s.posts);
+  const { categories, loading }  = useSelector(s => s.categories);
+  const { currentUser }          = useSelector(s => s.user);
+  const likeEntry                = useSelector(s => s.likes.byPost[id]) || { count: 0, liked: false };
+  const post                     = posts.find(p => p.id.toString() === id);
 
-  const post = posts.find(p => p.id.toString() === id);
+  // local state
+  const [isEditing, setIsEditing]           = useState(false);
+  const [title, setTitle]                   = useState('');
+  const [content, setContent]               = useState('');
+  const [category, setCategory]             = useState('');
+  const [filesToAdd, setFilesToAdd]         = useState([]);
+  const [error, setError]                   = useState(null);
+  const [menuOpen, setMenuOpen]             = useState(false);
+  const [confirmDelete, setConfirmDelete]   = useState(false);
+  const menuRef                              = useRef();
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [category, setCategory] = useState('');
-  const [filesToAdd, setFilesToAdd] = useState([]);
-  const [error, setError] = useState(null);
-
-
-
-
-  const [confirmDelete, setConfirmDelete] = useState(false);
-
+  // on mount: fetch posts, likes, categories
   useEffect(() => {
     if (!posts.length && status === 'idle') dispatch(fetchPosts());
     dispatch(fetchLikes(id));
     dispatch(fetchCategories());
   }, [dispatch, id, posts.length, status]);
 
-
+  // populate edit form when post is loaded
   useEffect(() => {
     if (post) {
       setTitle(post.title);
@@ -63,69 +54,78 @@ const PostDetail = () => {
     }
   }, [post]);
 
-  if (!post) return <p>Loading post…</p>;
+  // close dropdown menu if clicked outside
+  useEffect(() => {
+    const handleClickOutside = e => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-  const toggleLike = () => {
-    if (!currentUser) {
-      navigate('/login');
-      return;
-    }
+  if (!post) return <p className="loading">Loading post…</p>;
+
+  // like / unlike
+  const handleToggleLike = e => {
+    e.stopPropagation();
+    if (!currentUser) return navigate('/login');
     likeEntry.liked
       ? dispatch(unlikePost(post.id))
       : dispatch(likePost(post.id));
   };
 
+  // delete post
   const handleDelete = () => {
     dispatch(deletePost(post.id))
       .unwrap()
-      .then(() => navigate('/posts'))
       .then(() => {
-        toast.success('Post deleted')
+        toast.success('Post deleted');
+        navigate('/posts');
       })
-      .catch(err => {
-        toast.error('Failed to delete post: ' + err)});
+      .catch(err => toast.error('Failed to delete: ' + err));
   };
 
-  const handleImageDelete = (imageId) => {
-    dispatch(deletePostImage({ postId: post.id, imageId }))
+  // delete a single post image
+  const handleImageDelete = imgId => {
+    dispatch(deletePostImage({ postId: post.id, imageId: imgId }))
       .unwrap()
+      .then(() => dispatch(fetchPosts()))
       .catch(err => console.error(err));
   };
 
-  const handleEditSubmit = async (e) => {
+  // save edits
+  const handleEditSubmit = async e => {
     e.preventDefault();
     if (!title.trim() || !content.trim() || !category) {
-      setError('Title, content, and category are required');
+      setError('All fields are required');
       return;
     }
     try {
-      await dispatch(
-        updatePost({
-          postId: post.id,
-          title: title.trim(),
-          content: content.trim(),
-          category_id: category
-        })
-      ).unwrap();
+      await dispatch(updatePost({
+        postId: post.id,
+        title: title.trim(),
+        content: content.trim(),
+        category_id: category
+      })).unwrap();
 
       if (filesToAdd.length) {
         await dispatch(uploadPostImages({ postId: post.id, images: filesToAdd })).unwrap();
       }
+
       setIsEditing(false);
       dispatch(fetchPosts());
-    } catch (err) {
+      toast.success('Post updated');
+    } catch(err) {
       setError(err);
     }
-  };
-
-  const handleFileChange = (e) => {
-    setFilesToAdd([...filesToAdd, ...Array.from(e.target.files)]);
   };
 
   return (
     <div className="page post-detail">
       {isEditing ? (
-        <form onSubmit={handleEditSubmit} encType="multipart/form-data">
+        <form className="edit-form" onSubmit={handleEditSubmit}>
           <input
             type="text"
             value={title}
@@ -145,7 +145,7 @@ const PostDetail = () => {
             required
           >
             <option value="">Select category</option>
-            {catLoading
+            {loading
               ? <option>Loading…</option>
               : categories.map(c => (
                   <option key={c.id} value={c.id}>{c.name}</option>
@@ -156,85 +156,92 @@ const PostDetail = () => {
             type="file"
             multiple
             accept="image/*"
-            onChange={handleFileChange}
+            onChange={e => setFilesToAdd(f => [...f, ...Array.from(e.target.files)])}
           />
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', margin: '1rem 0' }}>
+          <div className="existing-images">
             {post.images.map(img => (
-              <div key={img.id} style={{ position: 'relative' }}>
-                <img src={img.url} alt="Post" style={{ maxWidth: 100, borderRadius: 4 }} />
+              <div className="img-thumb" key={img.id}>
+                <img src={img.url} alt="" />
                 <button
                   type="button"
+                  className="remove-img"
                   onClick={() => handleImageDelete(img.id)}
-                  style={{
-                    position: 'absolute', top: 0, right: 0,
-                    background: 'rgba(255,255,255,0.8)', border: 'none', cursor: 'pointer'
-                  }}
-                >✕</button>
+                >×</button>
               </div>
             ))}
           </div>
-          <button type="submit">Save</button>
-          <button type="button" onClick={() => setIsEditing(false)}>Cancel</button>
           {error && <p className="error">{error}</p>}
+          <div className="form-buttons">
+            <button type="submit" className="btn save">Save</button>
+            <button
+              type="button"
+              className="btn cancel"
+              onClick={() => setIsEditing(false)}
+            >Cancel</button>
+          </div>
         </form>
       ) : (
         <>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            {post.author_avatar && (
-              <img
-                src={post.author_avatar}
-                alt="Author avatar"
-                style={{ width: 40, height: 40, borderRadius: '50%' }}
-              />
+          <header className="detail-header">
+            <div className="title-block">
+              {post.author_avatar && (
+                <img src={post.author_avatar} className="author-avatar" alt="" />
+              )}
+              <h2 className="post-title">{post.title}</h2>
+            </div>
+            {currentUser?.id === post.user_id && (
+              <div className="menu-container" ref={menuRef}>
+                <button
+                  className="menu-btn"
+                  onClick={e => { e.stopPropagation(); setMenuOpen(o => !o); }}
+                >
+                  <FaEllipsisV />
+                </button>
+                {menuOpen && (
+                  <ul className="menu-dropdown">
+                    <li onClick={() => { setIsEditing(true); setMenuOpen(false); }}>
+                      Edit
+                    </li>
+                    <li onClick={() => { setConfirmDelete(true); setMenuOpen(false); }}>
+                      Delete
+                    </li>
+                  </ul>
+                )}
+              </div>
             )}
-            <h2>{post.title}</h2>
-          </div>
-          <p><em>Category: {post.category_name}</em></p>
-          <p>{post.content}</p>
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', margin: '1rem 0' }}>
+          </header>
+
+          <p className="post-category">
+            <em>Category: {post.category_name}</em>
+          </p>
+
+          <p className="post-content">{post.content}</p>
+
+          <div className="images-row">
             {post.images.map(img => (
-              <img
-                key={img.id}
-                src={img.url}
-                alt="Post"
-                style={{ maxWidth: 200, borderRadius: 4 }}
-              />
+              <img key={img.id} src={img.url} className="detail-image" alt="" />
             ))}
           </div>
-          <div style={{ margin: '1rem 0' }}>
-            <button onClick={toggleLike}>
-              {likeEntry.liked ? '💔 Unlike' : '❤️ Like'}
+
+          <div className="detail-footer">
+            <button
+              className={`like-btn ${likeEntry.liked ? 'liked' : ''}`}
+              onClick={handleToggleLike}
+            >
+              <FaHeart className="heart-icon" />
             </button>
-            <span style={{ marginLeft: '0.5rem' }}>
-              {likeEntry.count} {likeEntry.count === 1 ? 'like' : 'likes'}
-            </span>
+            <span className="like-count">{likeEntry.count}</span>
           </div>
-          {currentUser?.id === post.user_id && (
-            <div>
-              <button onClick={() => setIsEditing(true)}>Edit</button>
-              <button onClick={() => setConfirmDelete(true)}>Delete</button>
-
-
-
-              <ConfirmationModal
-                isOpen={confirmDelete}
-                title="Delete this post?"
-                message="This action cannot be undone."
-                onCancel={() => setConfirmDelete(false)}
-                onConfirm={() => {
-                  setConfirmDelete(false);
-                  handleDelete();
-                }}
-              />
-            </div>
-          )}
-
-
-
-
-
 
           <CommentsSection postId={post.id} />
+
+          <ConfirmationModal
+            isOpen={confirmDelete}
+            title="Delete this post?"
+            message="This action cannot be undone."
+            onCancel={() => setConfirmDelete(false)}
+            onConfirm={() => { setConfirmDelete(false); handleDelete(); }}
+          />
         </>
       )}
     </div>
