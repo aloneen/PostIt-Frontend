@@ -4,6 +4,7 @@ import { useNavigate }                from 'react-router-dom';
 import { fetchProfile, updateProfile, uploadAvatar } from '../redux/userSlice';
 import { fetchPosts }                 from '../redux/postSlice';
 import PostCard                       from '../components/PostCard';
+import { logoutUser } from '../redux/userSlice';
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
@@ -80,6 +81,11 @@ const ProfilePage = () => {
     }
   };
 
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    navigate('/login');
+  };
+
   return (
     <div className="page profile-page container">
       <h2>My Profile</h2>
@@ -132,6 +138,11 @@ const ProfilePage = () => {
           <button className="btn" onClick={() => setIsEditing(true)}>
             Edit Profile
           </button>
+
+          <br />
+          <br />
+
+          <button onClick={handleLogout}>Logout</button>
         </>
       )}
 

@@ -1,18 +1,12 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { logoutUser } from '../redux/userSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
-    navigate('/login');
-  };
+
 
   return (
     <nav className="navbar">
@@ -37,9 +31,9 @@ const Navbar = () => {
             )}
            
 
-            <Link to="/profile" onClick={() => setMenuOpen(false)}>Profile</Link>
+            <Link to="/profile" className='btn' onClick={() => setMenuOpen(false)}>Profile</Link>
 
-            <button onClick={handleLogout}>Logout</button>
+            
           </>
         ) : (
           <>

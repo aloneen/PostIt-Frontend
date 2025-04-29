@@ -3,23 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllComments, deleteComment } from '../redux/commentSlice';
 import { fetchCategories, createCategory, deleteCategory } from '../redux/categorySlice';
 import ConfirmationModal from '../components/ConfirmationModal';
-
-import './css/AdminPanel.css';
-
-
 import { toast } from 'react-toastify';
-
-
+import './css/AdminPanel.css';
 
 const ModeratorPage = () => {
   const dispatch = useDispatch();
-  const { allComments = [], error: commentError } = useSelector(s => s.comments);
-  const { categories = [], loading: catLoading, error: catError } = useSelector(s => s.categories);
+  const { allComments = [], error: commentError } = useSelector((s) => s.comments);
+  const { categories = [], loading: catLoading, error: catError } = useSelector((s) => s.categories);
 
   const [newCatName, setNewCatName] = useState('');
-
-
-
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [confirmDeleteComment, setConfirmDeleteComment] = useState(false);
 
@@ -27,6 +19,20 @@ const ModeratorPage = () => {
     dispatch(fetchAllComments());
     dispatch(fetchCategories());
   }, [dispatch]);
+
+  const handleCreateCategory = (e) => {
+    e.preventDefault();
+    if (!newCatName.trim()) return;
+    dispatch(createCategory({ name: newCatName.trim() }))
+      .unwrap()
+      .then(() => {
+        toast.success('Category created');
+        setNewCatName('');
+      })
+      .catch((err) => {
+        toast.error('Failed to create category: ' + err);
+      });
+  };
 
   const handleDeleteComment = (id) => {
     dispatch(deleteComment(id))
@@ -39,27 +45,13 @@ const ModeratorPage = () => {
       });
   };
 
-  const handleCreateCategory = e => {
-    e.preventDefault();
-    if (!newCatName.trim()) return;
-    dispatch(createCategory({ name: newCatName.trim() }))
-      .unwrap()
-      .then(() => {
-        toast.success('Category created')
-        setNewCatName('')
-      })
-      .catch(err => {
-        toast.error('Failed to create Category');
-      });
-  };
-
-  const handleDeleteCategory = id => {
+  const handleDeleteCategory = (id) => {
     dispatch(deleteCategory(id))
       .unwrap()
       .then(() => {
         toast.success('Category deleted');
       })
-      .catch(err => {
+      .catch((err) => {
         toast.error('Failed to delete category: ' + err);
       });
   };
@@ -68,48 +60,47 @@ const ModeratorPage = () => {
     <div className="moderator-page">
       <h2>Moderator Panel</h2>
 
-      {/* --- Categories --- */}
+      {/* Categories */}
       <section style={{ marginTop: '2rem' }}>
         <h3>Manage Categories</h3>
         {catError && <p style={{ color: 'red' }}>{catError}</p>}
 
-        <form onSubmit={handleCreateCategory} className="category-form">
+        <form onSubmit={handleCreateCategory}className="manage-categories-form">
           <input
             type="text"
             placeholder="New category name"
             value={newCatName}
-            onChange={e => setNewCatName(e.target.value)}
+            onChange={(e) => setNewCatName(e.target.value)}
             required
           />
-          <button type="submit">
-            Create
-          </button>
+          <button type="submit">Create</button>
         </form>
 
         {catLoading ? (
           <p>Loading categories…</p>
         ) : categories.length > 0 ? (
           <ul>
-            {categories.map(cat => (
+            {categories.map((cat) => (
               <li
                 key={cat.id}
                 style={{
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  padding: '12px'
+                  padding: '12px',
                 }}
               >
                 {cat.name}
                 <button
                   onClick={() => setConfirmDelete(true)}
-                  style={{ color: 'white' }}>
+                  style={{ color: 'white' }}
+                >
                   Delete
                 </button>
 
                 <ConfirmationModal
                   isOpen={confirmDelete}
-                  title="Delete this category??"
+                  title="Delete this category?"
                   message="This action cannot be undone."
                   onCancel={() => setConfirmDelete(false)}
                   onConfirm={() => {
@@ -117,7 +108,6 @@ const ModeratorPage = () => {
                     handleDeleteCategory(cat.id);
                   }}
                 />
-
               </li>
             ))}
           </ul>
@@ -126,18 +116,18 @@ const ModeratorPage = () => {
         )}
       </section>
 
-
-      {/* --- Comments --- */}
+      {/* Comments section remains unchanged */}
       <section>
         <h3>Manage Comments</h3>
         {commentError && <p style={{ color: 'red' }}>{commentError}</p>}
         {allComments.length > 0 ? (
           <ul>
-            {allComments.map(c => (
+            {allComments.map((c) => (
               <li key={c.id} style={{ marginBottom: '15px' }}>
                 <p>{c.content}</p>
                 <small>
-                  By: {c.user_username} | Post ID: {c.post_id} | {new Date(c.created_at).toLocaleString()}
+                  By: {c.user_username} | Post ID: {c.post_id} |{' '}
+                  {new Date(c.created_at).toLocaleString()}
                 </small>
                 <br />
                 <button
@@ -157,8 +147,6 @@ const ModeratorPage = () => {
                     handleDeleteComment(c.id);
                   }}
                 />
-
-
               </li>
             ))}
           </ul>
@@ -166,9 +154,11 @@ const ModeratorPage = () => {
           <p>No comments found.</p>
         )}
       </section>
-
     </div>
   );
 };
 
 export default ModeratorPage;
+
+
+
