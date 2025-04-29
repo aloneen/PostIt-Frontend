@@ -15,6 +15,10 @@ import ConfirmationModal                     from '../components/ConfirmationMod
 import CommentsSection                       from '../components/CommentsSection';
 import { toast }                             from 'react-toastify';
 import './PostDetail.css';
+import ImageCarousel from '../components/ImageCarousel';
+
+
+
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -217,11 +221,8 @@ const PostDetail = () => {
 
           <p className="post-content">{post.content}</p>
 
-          <div className="images-row">
-            {post.images.map(img => (
-              <img key={img.id} src={img.url} className="detail-image" alt="" />
-            ))}
-          </div>
+          <ImageCarousel images={post.images} />
+
 
           <div className="detail-footer">
             <button
