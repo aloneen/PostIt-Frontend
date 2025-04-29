@@ -4,6 +4,8 @@ import { createPost, uploadPostImages } from '../redux/postSlice';
 import { fetchCategories } from '../redux/categorySlice';
 import { useNavigate } from 'react-router-dom';
 
+import './css/CreatePost.css';
+
 
 import { toast } from 'react-toastify';
 

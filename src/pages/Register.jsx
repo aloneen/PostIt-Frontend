@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { registerUser } from '../redux/userSlice';
 import { useNavigate } from 'react-router-dom';
 
+import './css/Auth.css';
+
 const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail]     = useState('');

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchPosts } from '../redux/postSlice';
-import { fetchCategories } from '../redux/categorySlice';
-import PostCard from '../components/PostCard';
-import './Posts.css';
+import { useDispatch, useSelector }    from 'react-redux';
+import { fetchPosts }                   from '../redux/postSlice';
+import { fetchCategories }             from '../redux/categorySlice';
+import PostCard                         from '../components/PostCard';
+
+
+
+import './css/Posts.css';
 
 const Posts = () => {
   const dispatch = useDispatch();
@@ -11,17 +14,19 @@ const Posts = () => {
   const { categories, loading: catLoading } = useSelector(s => s.categories);
 
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [searchTitle, setSearchTitle] = useState('');
+  const [searchTitle, setSearchTitle]           = useState('');
 
   useEffect(() => {
     dispatch(fetchPosts());
     dispatch(fetchCategories());
   }, [dispatch]);
 
+  // filter by category
+  let filtered = selectedCategory
+    ? posts.filter(p => p.category_id === Number(selectedCategory))
+    : posts;
 
-  let filtered = selectedCategory ? posts.filter(p => p.category_id === Number(selectedCategory)) : posts;
-
-  
+  // further filter by title search
   if (searchTitle.trim()) {
     const term = searchTitle.toLowerCase();
     filtered = filtered.filter(p =>
@@ -30,9 +35,8 @@ const Posts = () => {
   }
 
   return (
-    <div className="page posts-page">
+    <div className="posts-page">
       <h2 className="posts-page__title">All Posts</h2>
-
 
       <input
         type="text"
@@ -42,13 +46,21 @@ const Posts = () => {
         onChange={e => setSearchTitle(e.target.value)}
       />
 
-
       <div className="posts-page__filter">
-        <button className={`pill ${selectedCategory === '' ? 'pill--active' : ''}`} onClick={() => setSelectedCategory('')}>All</button>
+        <button
+          className={`pill ${selectedCategory === '' ? 'pill--active' : ''}`}
+          onClick={() => setSelectedCategory('')}
+        >
+          All
+        </button>
         {catLoading
           ? <span className="pill pill--loading">Loading…</span>
           : categories.map(c => (
-              <button key={c.id} className={`pill ${String(c.id) === selectedCategory ? 'pill--active' : ''}`} onClick={() => setSelectedCategory(String(c.id))}>
+              <button
+                key={c.id}
+                className={`pill ${String(c.id) === selectedCategory ? 'pill--active' : ''}`}
+                onClick={() => setSelectedCategory(String(c.id))}
+              >
                 {c.name}
               </button>
             ))
@@ -56,7 +68,7 @@ const Posts = () => {
       </div>
 
       {status === 'loading' && <p className="posts-page__message">Loading posts…</p>}
-      {error   && <p className="posts-page__message posts-page__error">{error}</p>}
+      {error && <p className="posts-page__message posts-page__error">{error}</p>}
 
       {filtered.length > 0 ? (
         <div className="posts-page__grid">

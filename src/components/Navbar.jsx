@@ -19,9 +19,9 @@ const Navbar = () => {
       <div className="navbar-brand">
         <Link to="/">PostIt</Link>
       </div>
-      <button className="navbar-toggle" onClick={() => setMenuOpen(!menuOpen)}>
+      {/* <button className="navbar-toggle" onClick={() => setMenuOpen(!menuOpen)}>
         &#9776;
-      </button>
+      </button> */}
       <div className={`navbar-links ${menuOpen ? 'active' : ''}`}>
         <Link to="/posts" onClick={() => setMenuOpen(false)}>Posts</Link>
         {currentUser ? (
@@ -35,9 +35,7 @@ const Navbar = () => {
             {(currentUser.role === 'Moderator' || currentUser.role === 'Admin') && (
               <Link to="/moderator" onClick={() => setMenuOpen(false)}>Moderator Panel</Link>
             )}
-            {/* <span className="user-greeting">
-              Welcome, {currentUser.username}
-            </span> */}
+           
 
             <Link to="/profile" onClick={() => setMenuOpen(false)}>Profile</Link>
 

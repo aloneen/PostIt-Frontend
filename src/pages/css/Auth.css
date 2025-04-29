@@ -1,0 +1,101 @@
+/* Styles for Login and Register pages */
+
+.page.login, .page.register {
+  max-width: 400px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+  text-align: center;
+  color: #e0e0e0;
+}
+
+/* Headings */
+h2 {
+  color: #ffffff;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+/* Form styles */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Input fields */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  padding: 0.75rem;
+  border: 1px solid #555;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #e0e0e0;
+  background-color: #2a2a2a;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+input::placeholder {
+  color: #aaa;
+}
+
+/* Submit button */
+button[type="submit"] {
+  padding: 0.75rem;
+  background-color: #ff6f61;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button[type="submit"]:hover {
+  background-color: #e55b4d;
+}
+
+button[type="submit"]:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+}
+
+/* Error messages */
+p.error {
+  background-color: #5b1f1f;
+  color: #ff4d4f;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .page.login, .page.register {
+    margin: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  button[type="submit"] {
+    font-size: 0.9rem;
+  }
+}

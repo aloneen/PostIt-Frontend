@@ -14,7 +14,11 @@ import { FaHeart, FaEllipsisV }              from 'react-icons/fa';
 import ConfirmationModal                     from '../components/ConfirmationModal';
 import CommentsSection                       from '../components/CommentsSection';
 import { toast }                             from 'react-toastify';
-import './PostDetail.css';
+
+
+import './css/PostDetail.css';
+
+
 import ImageCarousel from '../components/ImageCarousel';
 
 

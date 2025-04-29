@@ -1,0 +1,79 @@
+/* container & title */
+.posts-page {
+  padding: 20px;
+  max-width: 800px;
+  margin: 40px auto;
+  background: #1e1e1e;
+  color: #e0e0e0;
+}
+
+.posts-page__title {
+  margin-bottom: 16px;
+  font-size: 1.75rem;
+  color: #ffffff;
+}
+
+/* search input */
+.posts-page__search-title {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  border: 1px solid #555;
+  border-radius: 4px;
+  background-color: #2a2a2a;
+  color: #fff;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+}
+
+/* category pills row */
+.posts-page__filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.pill {
+  padding: 6px 14px;
+  font-size: 0.9rem;
+  border: 1px solid #555;
+  border-radius: 20px;
+  background-color: #2a2a2a;
+  color: #ccc;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.pill:hover {
+  background-color: #3a3a3a;
+  border-color: #777;
+}
+
+.pill--active {
+  background-color: #ff6f61;
+  border-color: #ff6f61;
+  color: #fff;
+}
+
+.pill--loading {
+  cursor: default;
+  opacity: 0.6;
+}
+
+/* grid of cards (one per row) */
+.posts-page__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+/* status & error messages */
+.posts-page__message {
+  font-size: 1rem;
+  color: #aaa;
+}
+
+.posts-page__error {
+  color: #ff4d4f;
+}

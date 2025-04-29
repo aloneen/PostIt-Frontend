@@ -49,12 +49,8 @@ const App = () => {
         </div>
       </div>
 
-      <ToastContainer 
-        position="top-right" 
-        autoClose={3000} 
-        hideProgressBar={false} 
-        pauseOnHover 
-      />
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} pauseOnHover theme='dark'/>
+      
     </BrowserRouter>
   );
 };

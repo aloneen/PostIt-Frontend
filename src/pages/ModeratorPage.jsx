@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllComments, deleteComment } from '../redux/commentSlice';
-import {
-  fetchCategories,
-  createCategory,
-  deleteCategory
-} from '../redux/categorySlice';
+import { fetchCategories, createCategory, deleteCategory } from '../redux/categorySlice';
+import ConfirmationModal from '../components/ConfirmationModal';
 
+import './css/AdminPanel.css';
 
 
 import { toast } from 'react-toastify';
-import ConfirmationModal from '../components/ConfirmationModal';
+
 
 
 const ModeratorPage = () => {
@@ -70,6 +68,65 @@ const ModeratorPage = () => {
     <div className="moderator-page">
       <h2>Moderator Panel</h2>
 
+      {/* --- Categories --- */}
+      <section style={{ marginTop: '2rem' }}>
+        <h3>Manage Categories</h3>
+        {catError && <p style={{ color: 'red' }}>{catError}</p>}
+
+        <form onSubmit={handleCreateCategory} className="category-form">
+          <input
+            type="text"
+            placeholder="New category name"
+            value={newCatName}
+            onChange={e => setNewCatName(e.target.value)}
+            required
+          />
+          <button type="submit">
+            Create
+          </button>
+        </form>
+
+        {catLoading ? (
+          <p>Loading categories…</p>
+        ) : categories.length > 0 ? (
+          <ul>
+            {categories.map(cat => (
+              <li
+                key={cat.id}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '12px'
+                }}
+              >
+                {cat.name}
+                <button
+                  onClick={() => setConfirmDelete(true)}
+                  style={{ color: 'white' }}>
+                  Delete
+                </button>
+
+                <ConfirmationModal
+                  isOpen={confirmDelete}
+                  title="Delete this category??"
+                  message="This action cannot be undone."
+                  onCancel={() => setConfirmDelete(false)}
+                  onConfirm={() => {
+                    setConfirmDelete(false);
+                    handleDeleteCategory(cat.id);
+                  }}
+                />
+
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No categories yet.</p>
+        )}
+      </section>
+
+
       {/* --- Comments --- */}
       <section>
         <h3>Manage Comments</h3>
@@ -85,7 +142,7 @@ const ModeratorPage = () => {
                 <br />
                 <button
                   onClick={() => setConfirmDeleteComment(true)}
-                  style={{ marginTop: '5px', color: 'red' }}
+                  style={{ marginTop: '5px', color: 'white' }}
                 >
                   Delete
                 </button>
@@ -110,64 +167,6 @@ const ModeratorPage = () => {
         )}
       </section>
 
-      {/* --- Categories --- */}
-      <section style={{ marginTop: '2rem' }}>
-        <h3>Manage Categories</h3>
-        {catError && <p style={{ color: 'red' }}>{catError}</p>}
-
-        <form onSubmit={handleCreateCategory} style={{ marginBottom: '1rem' }}>
-          <input
-            type="text"
-            placeholder="New category name"
-            value={newCatName}
-            onChange={e => setNewCatName(e.target.value)}
-            required
-          />
-          <button type="submit" style={{ marginLeft: '8px' }}>
-            Create
-          </button>
-        </form>
-
-        {catLoading ? (
-          <p>Loading categories…</p>
-        ) : categories.length > 0 ? (
-          <ul>
-            {categories.map(cat => (
-              <li
-                key={cat.id}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '8px 0'
-                }}
-              >
-                {cat.name}
-                <button
-                  onClick={() => setConfirmDelete(true)}
-                  style={{ color: 'red' }}
-                >
-                  Delete
-                </button>
-
-                <ConfirmationModal
-                  isOpen={confirmDelete}
-                  title="Delete this category??"
-                  message="This action cannot be undone."
-                  onCancel={() => setConfirmDelete(false)}
-                  onConfirm={() => {
-                    setConfirmDelete(false);
-                    handleDeleteCategory(cat.id);
-                  }}
-                />
-
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No categories yet.</p>
-        )}
-      </section>
     </div>
   );
 };

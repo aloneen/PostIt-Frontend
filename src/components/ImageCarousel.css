@@ -1,86 +1,87 @@
-
 .carousel {
-    position: relative;
-    width: 100%;
-    max-width: 800px;  
-    height: 400px;       
-    margin: 0 auto 2rem;
-    overflow: hidden;
-    border-radius: 8px;
-    background: #f5f5f5;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
-  
-  .carousel__image {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: contain; 
-    object-position: center;
-  }
-  
-  .carousel__arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: #ff6f61;
-    color: #fff;
-    border: none;
-    padding: 12px;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    transition: background-color 0.2s, transform 0.2s, opacity 0.2s;
-    opacity: 0;
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .carousel:hover .carousel__arrow {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  
-  .carousel__arrow:hover {
-    background-color: #e55b4d;
-    transform: translateY(-50%) scale(1.1);
-  }
-  
-  .carousel__arrow--left {
-    left: 16px;
-  }
-  
-  .carousel__arrow--right {
-    right: 16px;
-  }
-  
-  .carousel__dots {
-    position: absolute;
-    bottom: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-  }
-  
-  .carousel__dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: rgba(255,255,255,0.8);
-    border: 2px solid #ccc;
-    cursor: pointer;
-    transition: background-color 0.2s, border-color 0.2s;
-  }
-  
-  .carousel__dot:hover {
-    background-color: #fff;
-  }
-  
-  .carousel__dot.active {
-    background-color: #ff6f61;
-    border-color: #ff6f61;
-  }
-  
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  height: 400px;
+  margin: 0 auto 2rem;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #1e1e1e;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+}
+
+.carousel__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  background: #2a2a2a;
+}
+
+/* ARROWS */
+.carousel__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #ff6f61;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: background-color 0.2s, transform 0.2s, opacity 0.2s;
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel:hover .carousel__arrow {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.carousel__arrow:hover {
+  background-color: #e55b4d;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel__arrow--left {
+  left: 16px;
+}
+
+.carousel__arrow--right {
+  right: 16px;
+}
+
+/* DOTS */
+.carousel__dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+
+.carousel__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+  border: 2px solid #666;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.carousel__dot:hover {
+  background-color: #fff;
+}
+
+.carousel__dot.active {
+  background-color: #ff6f61;
+  border-color: #ff6f61;
+}
