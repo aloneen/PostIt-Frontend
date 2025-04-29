@@ -5,8 +5,8 @@ import { likePost, unlikePost, fetchLikes } from '../redux/likeSlice';
 import { useNavigate } from 'react-router-dom';
 
 
-import ConfirmationModal                 from './ConfirmationModal';
-import { toast }                         from 'react-toastify';
+import ConfirmationModal from './ConfirmationModal';
+import { toast } from 'react-toastify';
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
