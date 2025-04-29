@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchComments, createComment, deleteComment } from '../redux/commentSlice';
 
-import ConfirmationModal                    from './ConfirmationModal';
-import { toast }                            from 'react-toastify';
+import ConfirmationModal from './ConfirmationModal';
+import { toast } from 'react-toastify';
 
 const CommentsSection = ({ postId }) => {
   const dispatch = useDispatch();
