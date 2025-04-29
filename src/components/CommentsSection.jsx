@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector }    from 'react-redux';
 import { fetchComments, createComment, deleteComment } from '../redux/commentSlice';
-
-import ConfirmationModal from './ConfirmationModal';
-import { toast } from 'react-toastify';
+import ConfirmationModal                from './ConfirmationModal';
+import { toast }                        from 'react-toastify';
+import './CommentsSection.css';
 
 const CommentsSection = ({ postId }) => {
-  const dispatch = useDispatch();
-  const { comments } = useSelector(state => state.comments);
-  const { currentUser } = useSelector(state => state.user);
+  const dispatch    = useDispatch();
+  const { comments }  = useSelector(s => s.comments);
+  const { currentUser } = useSelector(s => s.user);
+
   const [commentText, setCommentText] = useState('');
-  const [error, setError] = useState(null);
-
-
+  const [error, setError]             = useState(null);
   const [confirmId, setConfirmId]     = useState(null);
 
   useEffect(() => {
@@ -22,7 +21,7 @@ const CommentsSection = ({ postId }) => {
   const handleSubmit = e => {
     e.preventDefault();
     if (!commentText.trim()) {
-      setError('Comment required');
+      setError('Please enter a comment.');
       return;
     }
     dispatch(createComment({ post_id: postId, content: commentText }))
@@ -38,61 +37,58 @@ const CommentsSection = ({ postId }) => {
       });
   };
 
-
-
   const handleDelete = id => {
     dispatch(deleteComment(id))
       .unwrap()
-      .then(() => {
-        toast.success('Comment deleted');
-      })
-      .catch(err => {
-        toast.error('Failed to delete comment: ' + err);
-      });
+      .then(() => toast.success('Comment deleted'))
+      .catch(err => toast.error('Failed to delete comment: ' + err));
   };
 
   return (
     <div className="comments-section">
       <h4>Comments</h4>
       {currentUser ? (
-        <form onSubmit={handleSubmit}>
+        <form className="comment-form" onSubmit={handleSubmit}>
           <input
+            className="comment-input"
             type="text"
-            placeholder="Add a comment..."
+            placeholder="Add a comment…"
             value={commentText}
             onChange={e => setCommentText(e.target.value)}
           />
-          <button type="submit">Send</button>
-          {error && <p className="error">{error}</p>}
+          <button className="btn submit-btn" type="submit">Send</button>
+          {error && <div className="error">{error}</div>}
         </form>
       ) : (
-        <p>Please log in to add a comment.</p>
+        <p className="login-prompt">Please log in to leave a comment.</p>
       )}
-      <div className="comments-list">
+
+      <ul className="comments-list">
         {comments.map(c => (
-          <div key={c.id} className="comment" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <li key={c.id} className="comment-item">
             {c.user_avatar && (
               <img
+                className="comment-avatar"
                 src={c.user_avatar}
                 alt={`${c.user_username}'s avatar`}
-                style={{ width: 32, height: 32, borderRadius: '50%' }}
               />
             )}
-            <div>
-              <p>{c.content}</p>
-              <small>By: {c.user_username}</small>
+            <div className="comment-body">
+              <p className="comment-text">{c.content}</p>
+              <small className="comment-meta">By {c.user_username}</small>
             </div>
-             {(currentUser?.role === 'Admin' || currentUser?.id === c.user_id) && (
+            {(currentUser?.role === 'Admin' || currentUser?.id === c.user_id) && (
               <>
-                <button 
-                  className="btn btn-delete"
+                <button
+                  className="btn delete-comment-btn"
                   onClick={() => setConfirmId(c.id)}
                 >
                   Delete
                 </button>
                 <ConfirmationModal
                   isOpen={confirmId === c.id}
-                  title="Delete this comment?"
+                  title="Delete comment?"
+                  message="This cannot be undone."
                   onCancel={() => setConfirmId(null)}
                   onConfirm={() => {
                     handleDelete(c.id);
@@ -101,9 +97,9 @@ const CommentsSection = ({ postId }) => {
                 />
               </>
             )}
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 };
