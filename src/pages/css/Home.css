@@ -1,120 +1,132 @@
-.hero-banner {
-    position: relative;
-    height: 100vh;
-    background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+.home-page {
+  background: #121212;
+  color: #f0f0f0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Hero Section */
+.hero {
+  height: 100vh;
+  background: linear-gradient(135deg, #1f1c2c, #928dab);
+
+
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.hero-text {
+  max-width: 720px;
+  padding: 2rem;
+}
+
+.hero-text h1 {
+  font-size: 3.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.hero-text h1 span {
+  color: #ff5f6d;
+}
+
+.hero-text p {
+  font-size: 1.25rem;
+  color: #ccc;
+  margin-bottom: 2rem;
+}
+
+.explore-btn {
+  background: #ff5f6d;
+  color: #fff;
+  padding: 14px 28px;
+  font-size: 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.explore-btn:hover {
+  background-color: #ff7a85;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 111, 109, 0.3);
+}
+
+/* Features Section */
+.features-section {
+  padding: 4rem 2rem 5rem;
+  background-color: #1a1a1a;
+  text-align: center;
+}
+
+.features-section h2 {
+  font-size: 2.2rem;
+  margin-bottom: 2.5rem;
+  color: #ff5f6d;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background-color: #292929;
+  padding: 2rem 1.5rem;
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+}
+
+.feature-card h3 {
+  color: #ff9068;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.feature-card p {
+  color: #ccc;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Footer */
+.footer {
+  background-color: #121212;
+  color: #888;
+  padding: 2rem 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.footer strong {
+  color: #ddd;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-text h1 {
+    font-size: 2.4rem;
   }
-  
-  .hero-overlay {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(4px);
+
+  .features-section h2 {
+    font-size: 1.8rem;
   }
-  
-  .hero-content {
-    position: relative;
-    text-align: center;
-    color: #fff;
-    z-index: 1;
-    padding: 0 2rem;
-    max-width: 800px;
-    animation: slideUp 1s ease-out forwards;
+
+  .feature-card {
+    padding: 1.5rem 1rem;
   }
-  
-  .hero-content h1 {
-    font-size: 3rem;
-    margin-bottom: 0.8rem;
-  }
-  
-  .hero-content .highlight {
-    color: #ff6f61;
-  }
-  
-  .hero-content p {
-    font-size: 1.25rem;
-    margin-bottom: 2rem;
-  }
-  
-  .hero-btn {
-    background: linear-gradient(to right, #ff6f61, #ff9068);
-    padding: 14px 30px;
-    font-size: 1.1rem;
-    border-radius: 6px;
-    color: #fff;
-    border: none;
-    transition: transform 0.3s ease;
-  }
-  
-  .hero-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 12px rgba(255, 111, 97, 0.6);
-  }
-  
-  /* Info section */
-  .info-section {
-    background: #1e1e1e;
-    padding: 4rem 2rem;
-    border-radius: 12px;
-    margin: -100px auto 40px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-  }
-  
-  .info-section h2,
-  .info-section h3 {
-    color: #ff6f61;
-  }
-  
-  .info-section ul {
-    list-style: none;
-    padding-left: 0;
-  }
-  
-  .info-section li {
-    margin: 8px 0;
-    color: #ddd;
-    padding-left: 1.2em;
-    position: relative;
-  }
-  
-  .info-section li::before {
-    content: "✔";
-    color: #4ade80;
-    position: absolute;
-    left: 0;
-  }
-  
-  /* Footer credits */
-  .credits {
-    text-align: center;
-    color: #888;
-    font-size: 0.9rem;
-    padding-bottom: 2rem;
-  }
-  
-  /* Animations */
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(40px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .fade-in {
-    opacity: 0;
-    animation: slideUp 0.6s ease-out forwards;
-  }
-  
-  .delay-1 { animation-delay: 0.3s; }
-  .delay-2 { animation-delay: 0.6s; }
-  .delay-3 { animation-delay: 0.9s; }
-  .delay-4 { animation-delay: 1.2s; }
-  
+}

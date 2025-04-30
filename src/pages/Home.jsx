@@ -1,44 +1,41 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
-
-
 import './css/Home.css';
 
 const Home = () => {
   return (
-    <div className="home">
-      <section className="hero-banner">
-        <div className="hero-overlay" />
-        <div className="hero-content">
-          <h1 className="fade-in">🚀 Welcome to <span className="highlight">PostIt</span></h1>
-          <p className="fade-in delay-1">
-            Share your thoughts. Connect deeply. Create freely.
-          </p>
-          <Link to="/posts" className="btn hero-btn fade-in delay-2">
-            Explore Posts
-          </Link>
+    <div className="home-page">
+      <div className="hero">
+        <div className="hero-text">
+          <h1>Welcome to <span>PostIt</span></h1>
+          <p>Your creative space to share ideas, connect, and grow.</p>
+          <Link to="/posts" className="explore-btn">Browse Posts</Link>
         </div>
-      </section>
+      </div>
 
-      <section className="info-section container fade-in delay-3">
-        <h2>✨ What is PostIt?</h2>
-        <p>
-          PostIt is your digital space to express ideas, interact with a community, and
-          grow your voice — all with style and simplicity.
-        </p>
-        <h3>🌟 Features</h3>
-        <ul>
-          <li>Create & edit beautiful posts</li>
-          <li>Engage in thoughtful discussions</li>
-          <li>Moderation for community health</li>
-          <li>Responsive, sleek interface</li>
-        </ul>
-      </section>
+      <div className="features-section">
+        <h2>Why PostIt?</h2>
+        <div className="features-grid">
+          <div className="feature-card">
+            <h3>Express</h3>
+            <p>Create beautiful posts to share your thoughts with the world.</p>
+          </div>
+          <div className="feature-card">
+            <h3>Engage</h3>
+            <p>Start conversations and connect deeply with a like-minded community.</p>
+          </div>
+          <div className="feature-card">
+            <h3>Moderate</h3>
+            <p>Empower responsible dialogue through smart moderation tools.</p>
+          </div>
+          
+        </div>
+      </div>
 
-      <footer className="credits container fade-in delay-4">
-        <p>
-          Crafted with ❤️ by <strong>Seisenbek Dias</strong> & <strong>Suleimenov Dinmukhamed</strong>
-        </p>
+      <footer className="footer">
+        <p>Crafted by <strong>Seisenbek Dias</strong> & <strong>Suleimenov Dinmukhamed</strong></p>
+        <p>© {new Date().getFullYear()} PostIt</p>
       </footer>
     </div>
   );
