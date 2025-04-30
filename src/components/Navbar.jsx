@@ -1,47 +1,43 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { FaHome, FaSearch, FaPlus, FaUserCog, FaUserShield, FaUser } from 'react-icons/fa';
+
+import './Navbar.css';
 
 const Navbar = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser } = useSelector(state => state.user);
+  const location = useLocation();
 
-
+  const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="navbar">
-      <div className="navbar-brand">
-        <Link to="/">PostIt</Link>
-      </div>
-      {/* <button className="navbar-toggle" onClick={() => setMenuOpen(!menuOpen)}>
-        &#9776;
-      </button> */}
-      <div className={`navbar-links ${menuOpen ? 'active' : ''}`}>
-        <Link to="/posts" onClick={() => setMenuOpen(false)}>Posts</Link>
-        {currentUser ? (
-          
-          <>
+    <nav className="sidebar">
+      <Link to="/" className={`icon ${isActive('/') ? 'active' : ''}`}>
+        <FaHome />
+      </Link>
+      <Link to="/posts" className={`icon ${isActive('/posts') ? 'active' : ''}`}>
+        <FaSearch />
+      </Link>
+      <Link to="/create-post" className={`icon ${isActive('/create-post') ? 'active' : ''}`}>
+        <FaPlus />
+      </Link>
 
-            <Link to="/create-post" onClick={() => setMenuOpen(false)}>Create Post</Link>
-            {currentUser.role === 'Admin' && (
-              <Link to="/admin" onClick={() => setMenuOpen(false)}>Admin Panel</Link>
-            )}
-            {(currentUser.role === 'Moderator' || currentUser.role === 'Admin') && (
-              <Link to="/moderator" onClick={() => setMenuOpen(false)}>Moderator Panel</Link>
-            )}
-           
+      {currentUser?.role === 'Admin' && (
+        <Link to="/admin" className={`icon ${isActive('/admin') ? 'active' : ''}`}>
+          <FaUserShield />
+        </Link>
+      )}
 
-            <Link to="/profile" className='btn' onClick={() => setMenuOpen(false)}>Profile</Link>
+      {(currentUser?.role === 'Moderator' || currentUser?.role === 'Admin') && (
+        <Link to="/moderator" className={`icon ${isActive('/moderator') ? 'active' : ''}`}>
+          <FaUserCog />
+        </Link>
+      )}
 
-            
-          </>
-        ) : (
-          <>
-            <Link to="/login" onClick={() => setMenuOpen(false)}>Login</Link>
-            <Link to="/register" onClick={() => setMenuOpen(false)}>Register</Link>
-          </>
-        )}
-      </div>
+      <Link to={currentUser ? '/profile' : '/login'} className={`icon ${isActive('/profile') ? 'active' : ''}`}>
+        <FaUser />
+      </Link>
     </nav>
   );
 };

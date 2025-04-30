@@ -82,6 +82,23 @@ p.error {
   font-size: 0.9rem;
 }
 
+.redirect-text {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: #ccc;
+  text-align: center;
+}
+
+.redirect-text a {
+  color: #4ea0f0;
+  text-decoration: none;
+}
+
+.redirect-text a:hover {
+  text-decoration: underline;
+}
+
+
 /* Responsive design */
 @media (max-width: 480px) {
   .page.login, .page.register {

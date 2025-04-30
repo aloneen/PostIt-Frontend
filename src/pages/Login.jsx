@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../redux/userSlice';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import './css/Auth.css';
 
@@ -41,6 +41,10 @@ const Login = () => {
         <button type="submit" disabled={loading}>Login</button>
       </form>
       {error && <p className="error">{error}</p>}
+      <p className="redirect-text">
+        Don’t have an account? <Link to="/register">Register</Link>
+      </p>
+
     </div>
   );
 };

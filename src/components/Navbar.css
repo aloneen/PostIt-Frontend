@@ -1,0 +1,31 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 100vh;
+    background-color: #111;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* ✅ centers vertically */
+    gap: 1.8rem;
+    z-index: 100;
+}
+  
+  
+.icon {
+    font-size: 1.5rem;
+    color: gray;
+    transition: color 0.3s, transform 0.2s;
+}
+  
+.icon:hover {
+    color: white;
+    transform: scale(1.1);
+}
+  
+.icon.active {
+    color: white;
+}
+  
