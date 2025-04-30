@@ -1,19 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useParams, useNavigate }            from 'react-router-dom';
-import { useDispatch, useSelector }          from 'react-redux';
-import {
-  fetchPosts,
-  deletePost,
-  updatePost,
-  uploadPostImages,
-  deletePostImage
-} from '../redux/postSlice';
-import { fetchLikes, likePost, unlikePost }  from '../redux/likeSlice';
-import { fetchCategories }                   from '../redux/categorySlice';
-import { FaHeart, FaEllipsisV }              from 'react-icons/fa';
-import ConfirmationModal                     from '../components/ConfirmationModal';
-import CommentsSection                       from '../components/CommentsSection';
-import { toast }                             from 'react-toastify';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPosts, deletePost, updatePost, uploadPostImages, deletePostImage } from '../redux/postSlice';
+import { fetchLikes, likePost, unlikePost } from '../redux/likeSlice';
+import { fetchCategories } from '../redux/categorySlice';
+import { FaHeart, FaEllipsisV } from 'react-icons/fa';
+import ConfirmationModal from '../components/ConfirmationModal';
+import CommentsSection from '../components/CommentsSection';
+import { toast } from 'react-toastify';
 
 
 import './css/PostDetail.css';

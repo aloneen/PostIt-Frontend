@@ -266,6 +266,14 @@ button[type="submit"] {
 }
 
 
+.moderator-comment-text {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap; /* preserve newlines if any */
+}
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .category-form {

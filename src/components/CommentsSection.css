@@ -90,6 +90,10 @@
   margin: 0 0 4px;
   font-size: 0.95rem;
   color: #ccc;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap;
 }
 
 .comment-meta {

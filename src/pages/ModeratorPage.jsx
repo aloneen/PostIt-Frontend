@@ -124,7 +124,8 @@ const ModeratorPage = () => {
           <ul>
             {allComments.map((c) => (
               <li key={c.id} style={{ marginBottom: '15px' }}>
-                <p>{c.content}</p>
+                <p className="moderator-comment-text">{c.content}</p>
+
                 <small>
                   By: {c.user_username} | Post ID: {c.post_id} |{' '}
                   {new Date(c.created_at).toLocaleString()}
