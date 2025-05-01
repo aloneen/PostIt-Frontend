@@ -81,7 +81,7 @@ const ProfilePage = () => {
 
       <div className="profile-page__avatar-section">
         <img
-          src={profile.avatar_url || '/default-avatar.png'}
+          src={profile.avatar_url || '/ava.jpg'}
           alt="Avatar"
           className="profile-page__avatar-img"
         />

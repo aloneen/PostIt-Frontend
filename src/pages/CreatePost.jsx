@@ -101,13 +101,17 @@ const CreatePost = () => {
               ))
           }
         </select>
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleFileChange}
-        />
-        <button type="submit">Post</button>
+        <label className="file-upload">
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleFileChange}/>
+          Choose Images
+          {files.length > 0 && <span className="file-count">{files.length} selected</span>}
+        </label>
+
+        <button type="submit" id='post-create-btn'>Post</button>
       </form>
     </div>
   );
