@@ -1,75 +1,75 @@
 .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 120px;
-    height: 100vh;
-    background-color: #111;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 1rem;
-    padding-bottom: 2rem;
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 120px;
+  height: 100vh;
+  background-color: #111;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
 
 
 .logo-top {
-    margin-top: 1rem;
-  }
+  margin-top: 1rem;
+}
   
-  .nav-center {
-    display: flex;
-    flex-direction: column;
-    gap: 1.8rem;
-    justify-content: center;
-    flex-grow: 1;
-  }
+.nav-center {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  justify-content: center;
+  flex-grow: 1;
+}
   
   
 .icon {
-    font-size: 1.5rem;
-    color: gray;
-    transition: color 0.3s, transform 0.2s;
+  font-size: 1.5rem;
+  color: gray;
+  transition: color 0.3s, transform 0.2s;
 }
   
 .icon:hover {
-    color: white;
-    transform: scale(1.1);
+  color: white;
+  transform: scale(1.1);
 }
   
 .icon.active {
-    color: white;
+  color: white;
 }
   
 .logo-container {
-    margin-bottom: 2rem;
-    padding: 0.5rem;
-    border-radius: 12px;
+  margin-bottom: 2rem;
+  padding: 0.5rem;
+  border-radius: 12px;
 
-  }
+}
   
-  .logo-img {
-    width: 72px;
-    height: auto;
-    object-fit: contain;
-    display: block;
-  }
+.logo-img {
+  width: 72px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
   
-  .logo-link {
-    margin-top: 1rem;
-    margin-bottom: 2rem;
-  }
+.logo-link {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
   
-  .logo-icon {
-    width: 120px;
-    height: 120px;
-    object-fit: contain;
-    filter: brightness(1.2);
-    transition: transform 0.2s ease;
-  }
-  
-  .logo-icon:hover {
-    transform: scale(1.1);
-  }
+.logo-icon {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  filter: brightness(1.2);
+  transition: transform 0.2s ease;
+}
+
+.logo-icon:hover {
+  transform: scale(1.1);
+}
   
