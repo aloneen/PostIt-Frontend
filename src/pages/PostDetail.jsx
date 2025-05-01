@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPosts, deletePost, updatePost, uploadPostImages, deletePostImage } from '../redux/postSlice';
@@ -9,14 +9,8 @@ import ConfirmationModal from '../components/ConfirmationModal';
 import CommentsSection from '../components/CommentsSection';
 import { toast } from 'react-toastify';
 
-
 import './css/PostDetail.css';
-
-
 import ImageCarousel from '../components/ImageCarousel';
-
-
-
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -36,9 +30,7 @@ const PostDetail = () => {
   const [category, setCategory] = useState('');
   const [filesToAdd, setFilesToAdd] = useState([]);
   const [error, setError] = useState(null);
-  const [menuOpen, setMenuOpen]  = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const menuRef = useRef();
 
   // on mount: fetch posts, likes, categories
   useEffect(() => {
@@ -56,26 +48,13 @@ const PostDetail = () => {
     }
   }, [post]);
 
-  // close dropdown menu if clicked outside
-  useEffect(() => {
-    const handleClickOutside = e => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
   if (!post) return <p className="loading">Loading post…</p>;
 
   // like / unlike
   const handleToggleLike = e => {
     e.stopPropagation();
     if (!currentUser) return navigate('/login');
-    likeEntry.liked
-      ? dispatch(unlikePost(post.id))
-      : dispatch(likePost(post.id));
+    likeEntry.liked ? dispatch(unlikePost(post.id)) : dispatch(likePost(post.id));
   };
 
   // delete post
@@ -105,21 +84,16 @@ const PostDetail = () => {
       return;
     }
     try {
-      await dispatch(updatePost({
-        postId: post.id,
-        title: title.trim(),
-        content: content.trim(),
-        category_id: category
-      })).unwrap();
-
+      await dispatch(
+        updatePost({ postId: post.id, title: title.trim(), content: content.trim(), category_id: category })
+      ).unwrap();
       if (filesToAdd.length) {
         await dispatch(uploadPostImages({ postId: post.id, images: filesToAdd })).unwrap();
       }
-
       setIsEditing(false);
       dispatch(fetchPosts());
       toast.success('Post updated');
-    } catch(err) {
+    } catch (err) {
       setError(err);
     }
   };
@@ -132,19 +106,22 @@ const PostDetail = () => {
           <textarea value={content} onChange={e => setContent(e.target.value)} placeholder="Content" required />
           <select value={category} onChange={e => setCategory(e.target.value)} required>
             <option value="">Select category</option>
-            {loading
-              ? <option>Loading…</option>
-              : categories.map(c => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
-                ))
-            }
+            {loading ? (
+              <option>Loading…</option>
+            ) : (
+              categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)
+            )}
           </select>
-          <input type="file" multiple accept="image/*" onChange={e => setFilesToAdd(f => [...f, ...Array.from(e.target.files)])}/>
+          <input type="file" multiple accept="image/*" onChange={e => setFilesToAdd(f => [...f, ...Array.from(e.target.files)])} />
           <div className="existing-images">
             {post.images.map(img => (
               <div className="img-thumb" key={img.id}>
                 <img src={img.url} alt="" />
-                <button type="button" className="remove-img" onClick={() => handleImageDelete(img.id)}>×</button>
+                <button
+                  type="button"
+                  className="remove-img"
+                  onClick={() => handleImageDelete(img.id)}
+                >×</button>
               </div>
             ))}
           </div>
@@ -164,21 +141,15 @@ const PostDetail = () => {
               <h2 className="post-title">{post.title}</h2>
             </div>
             {currentUser?.id === post.user_id && (
-              <div className="menu-container" ref={menuRef}>
-                <button className="menu-btn" onClick={e => { e.stopPropagation(); setMenuOpen(o => !o); }}>
+              <details className="menu-container">
+                <summary className="menu-btn">
                   <FaEllipsisV />
-                </button>
-                {menuOpen && (
-                  <ul className="menu-dropdown">
-                    <li onClick={() => { setIsEditing(true); setMenuOpen(false); }}>
-                      Edit
-                    </li>
-                    <li onClick={() => { setConfirmDelete(true); setMenuOpen(false); }}>
-                      Delete
-                    </li>
-                  </ul>
-                )}
-              </div>
+                </summary>
+                <ul className="menu-dropdown">
+                  <li onClick={() => setIsEditing(true)}>Edit</li>
+                  <li onClick={() => setConfirmDelete(true)}>Delete</li>
+                </ul>
+              </details>
             )}
           </header>
 
@@ -190,12 +161,8 @@ const PostDetail = () => {
 
           <ImageCarousel images={post.images} />
 
-
           <div className="detail-footer">
-            <button
-              className={`like-btn ${likeEntry.liked ? 'liked' : ''}`}
-              onClick={handleToggleLike}
-            >
+            <button className={`like-btn ${likeEntry.liked ? 'liked' : ''}`} onClick={handleToggleLike}>
               <FaHeart className="heart-icon" />
             </button>
             <span className="like-count">{likeEntry.count}</span>
@@ -208,7 +175,8 @@ const PostDetail = () => {
             title="Delete this post?"
             message="This action cannot be undone."
             onCancel={() => setConfirmDelete(false)}
-            onConfirm={() => { setConfirmDelete(false); handleDelete(); }} />
+            onConfirm={() => { setConfirmDelete(false); handleDelete(); }}
+          />
         </>
       )}
     </div>

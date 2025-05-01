@@ -247,3 +247,16 @@
   padding: 40px;
   color: #aaa;
 }
+
+
+.menu-container summary {
+  list-style: none;               /* remove default marker space */
+}
+
+.menu-container summary::-webkit-details-marker {
+  display: none;                  /* Chrome, Safari, Edge */
+}
+
+.menu-container summary::marker {
+  display: none;                  /* Firefox */
+}
