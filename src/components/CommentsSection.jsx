@@ -3,7 +3,7 @@ import { useDispatch, useSelector }    from 'react-redux';
 import { fetchComments, createComment, deleteComment } from '../redux/commentSlice';
 import ConfirmationModal                from './ConfirmationModal';
 import { toast }                        from 'react-toastify';
-import './CommentsSection.css';
+import './css/CommentsSection.css';
 
 const CommentsSection = ({ postId }) => {
   const dispatch    = useDispatch();

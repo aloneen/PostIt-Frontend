@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import './ImageCarousel.css';
+import './css/ImageCarousel.css';
 
 export default function ImageCarousel({ images }) {
   const [idx, setIdx] = useState(0);

@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FaHome, FaSearch, FaPlus, FaUserCog, FaUserShield, FaUser } from 'react-icons/fa';
 
-import './Navbar.css';
+import './css/Navbar.css';
 
 const Navbar = () => {
   const { currentUser } = useSelector(state => state.user);

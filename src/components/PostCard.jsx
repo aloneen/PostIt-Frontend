@@ -6,7 +6,7 @@ import { deletePost } from '../redux/postSlice';
 import { fetchLikes, likePost, unlikePost } from '../redux/likeSlice';
 import ConfirmationModal from './ConfirmationModal';
 import { toast } from 'react-toastify';
-import './PostCard.css';
+import './css/PostCard.css';
 
 const PostCard = ({ post }) => {
   const dispatch    = useDispatch();

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactModal from 'react-modal';
-import './ConfirmationModal.css';
+import './css/ConfirmationModal.css';
 
 ReactModal.setAppElement('#root');
 
