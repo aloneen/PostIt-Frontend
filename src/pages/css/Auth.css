@@ -12,7 +12,6 @@
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-/* Headings */
 h2 {
   color: #ffffff;
   font-size: 1.8rem;
@@ -20,14 +19,13 @@ h2 {
   margin-bottom: 1.5rem;
 }
 
-/* Form styles */
+
 form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-/* Input fields */
 input[type="text"],
 input[type="email"],
 input[type="password"] {
@@ -50,7 +48,6 @@ input::placeholder {
   color: #aaa;
 }
 
-/* Submit button */
 button[type="submit"] {
   padding: 0.75rem;
   background-color: #ff6f61;

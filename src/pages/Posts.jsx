@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector }    from 'react-redux';
-import { fetchPosts }                   from '../redux/postSlice';
-import { fetchCategories }             from '../redux/categorySlice';
-import PostCard                         from '../components/PostCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPosts } from '../redux/postSlice';
+import { fetchCategories } from '../redux/categorySlice';
+import PostCard from '../components/PostCard';
 
 
 
@@ -38,29 +38,16 @@ const Posts = () => {
     <div className="posts-page">
       <h2 className="posts-page__title">All Posts</h2>
 
-      <input
-        type="text"
-        className="posts-page__search-title"
-        placeholder="🔎 Search by title…"
-        value={searchTitle}
-        onChange={e => setSearchTitle(e.target.value)}
-      />
+      <input type="text" className="posts-page__search-title" placeholder="🔎 Search by title…" value={searchTitle} onChange={e => setSearchTitle(e.target.value)} />
 
       <div className="posts-page__filter">
-        <button
-          className={`pill ${selectedCategory === '' ? 'pill--active' : ''}`}
-          onClick={() => setSelectedCategory('')}
-        >
+        <button className={`pill ${selectedCategory === '' ? 'pill--active' : ''}`} onClick={() => setSelectedCategory('')}>
           All
         </button>
         {catLoading
           ? <span className="pill pill--loading">Loading…</span>
           : categories.map(c => (
-              <button
-                key={c.id}
-                className={`pill ${String(c.id) === selectedCategory ? 'pill--active' : ''}`}
-                onClick={() => setSelectedCategory(String(c.id))}
-              >
+              <button key={c.id} className={`pill ${String(c.id) === selectedCategory ? 'pill--active' : ''}`} onClick={() => setSelectedCategory(String(c.id))}>
                 {c.name}
               </button>
             ))

@@ -47,7 +47,7 @@ const CreatePost = () => {
     }
 
     try {
-      // 1) Create the post
+      // Create the post
       const result = await dispatch(createPost({
         title:         title.trim(),
         content:       content.trim(),
@@ -57,12 +57,12 @@ const CreatePost = () => {
       // extract the new post's ID
       const postId = result.post.id;
 
-      // 2) Upload images if any
+      // Upload images if any
       if (files.length) {
         await dispatch(uploadPostImages({ postId, images: files })).unwrap();
       }
 
-      // 3) Redirect back to posts
+      // Redirect back to posts
       toast.success("Post created");
       navigate('/posts');
     } catch (err) {
@@ -75,24 +75,9 @@ const CreatePost = () => {
       <h2>Create New Post</h2>
       {error && <p className="error">{error}</p>}
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-          required
-        />
-        <textarea
-          placeholder="Content"
-          value={content}
-          onChange={e => setContent(e.target.value)}
-          required
-        />
-        <select
-          value={selectedCategory}
-          onChange={e => setSelectedCategory(e.target.value)}
-          required
-        >
+        <input type="text" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} required />
+        <textarea placeholder="Content" value={content} onChange={e => setContent(e.target.value)} required />
+        <select value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)} required >
           <option value="">Select category</option>
           {catLoading
             ? <option>Loading…</option>
@@ -102,11 +87,7 @@ const CreatePost = () => {
           }
         </select>
         <label className="file-upload">
-          <input
-            type="file"
-            multiple
-            accept="image/*"
-            onChange={handleFileChange}/>
+          <input type="file" multiple accept="image/*" onChange={handleFileChange}/>
           Choose Images
           {files.length > 0 && <span className="file-count">{files.length} selected</span>}
         </label>

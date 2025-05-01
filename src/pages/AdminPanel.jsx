@@ -3,14 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUsers, changeUserRole, setUserActive } from '../redux/userSlice';
 import { toast } from 'react-toastify';
 import ConfirmationModal from '../components/ConfirmationModal';
-
 import { fetchPosts, deletePost } from '../redux/postSlice';
-
-
-
 import './css/AdminPanel.css';
-
-
 
 
 const AdminPanel = () => {
@@ -25,8 +19,6 @@ const AdminPanel = () => {
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [userToToggle, setUserToToggle] = useState(null);
-
-
   const [postToDelete, setPostToDelete] = useState(null);
   const [postModalOpen, setPostModalOpen] = useState(false);
 
@@ -99,28 +91,24 @@ const AdminPanel = () => {
     <div className="admin-panel">
 
       <h2>Admin Panel – Manage Users</h2>
+      
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
       {otherUsers.length > 0 ? (
 
         <ul className="user-list">
+
         {otherUsers.map(user => (
           <li key={user.id}>
             <span>
               {user.username} ({user.email})
             </span>
-            <select
-              value={user.role}
-              onChange={e => handleRoleChange(user.id, e.target.value)}
-            >
+            <select value={user.role} onChange={e => handleRoleChange(user.id, e.target.value)}>
               <option value="User">User</option>
               <option value="Moderator">Moderator</option>
               <option value="Admin">Admin</option>
             </select>
-            <button
-              onClick={() => promptToggleActive(user)}
-              className={user.is_active ? 'ban-button' : 'unban-button'}
-            >
+            <button onClick={() => promptToggleActive(user)} className={user.is_active ? 'ban-button' : 'unban-button'} >
               {user.is_active ? 'Ban' : 'Unban'}
             </button>
           </li>
@@ -146,14 +134,17 @@ const AdminPanel = () => {
             : ''
         }
         onConfirm={confirmToggleActive}
-        onCancel={cancelToggleActive}
-      />
+        onCancel={cancelToggleActive}/>
 
     <section className="admin-posts">
       <h3>Manage Posts</h3>
+
       {postError && <p style={{ color: 'red' }}>{postError}</p>}
+
       {posts.length > 0 ? (
+
         <ul style={{ listStyle: 'none', padding: 0 }}>
+
           {posts.map(post => (
             <li key={post.id} className="post-list-item">
             <div className="post-content-wrapper">
@@ -190,9 +181,6 @@ const AdminPanel = () => {
         <p>No posts found.</p>
       )}
     </section>
-
-
-
 
     </div>
   );

@@ -80,18 +80,10 @@ const ProfilePage = () => {
       <h2 className="profile-page__title">My Profile</h2>
 
       <div className="profile-page__avatar-section">
-        <img
-          src={profile.avatar_url || '/ava.jpg'}
-          alt="Avatar"
-          className="profile-page__avatar-img"
-        />
+        <img src={profile.avatar_url || '/ava.jpg'} alt="Avatar" className="profile-page__avatar-img" />
+
         {isEditing && (
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleAvatarChange}
-            className="profile-page__avatar-input"
-          />
+          <input type="file" accept="image/*" onChange={handleAvatarChange} className="profile-page__avatar-input" />
         )}
       </div>
 
@@ -105,9 +97,12 @@ const ProfilePage = () => {
             Email
             <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
           </label>
+
           {formError && <p className="profile-page__error">{formError}</p>}
+
           <button className="profile-page__btn" type="submit">Save</button>
           <button className="profile-page__btn" type="button" onClick={() => setIsEditing(false)}>Cancel</button>
+
         </form>
       ) : (
         <div className="profile-page__info">
@@ -119,6 +114,7 @@ const ProfilePage = () => {
       )}
 
       <h3 className="profile-page__subtitle">My Posts</h3>
+      
       {myPosts.length === 0 ? (
         <p>You haven’t written any posts yet.</p>
       ) : (

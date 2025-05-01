@@ -11,30 +11,26 @@ export default function ImageCarousel({ images }) {
 
   return (
     <div className="carousel">
-      <img
-        src={images[idx].url}
-        alt=""
-        className="carousel__image"
-      />
+      <img src={images[idx].url} alt="" className="carousel__image"/>
 
       {images.length > 1 && (
-        <>
+        <div>
           <button className="carousel__arrow carousel__arrow--left" onClick={prev}>
             <FaChevronLeft />
           </button>
+
           <button className="carousel__arrow carousel__arrow--right" onClick={next}>
             <FaChevronRight />
           </button>
+
           <div className="carousel__dots">
+
             {images.map((_, i) => (
-              <span
-                key={i}
-                className={`carousel__dot ${i === idx ? 'active' : ''}`}
-                onClick={() => setIdx(i)}
-              />
+              <span key={i} className={`carousel__dot ${i === idx ? 'active' : ''}`} onClick={() => setIdx(i)} />
             ))}
+
           </div>
-        </>
+        </div>
       )}
     </div>
   );

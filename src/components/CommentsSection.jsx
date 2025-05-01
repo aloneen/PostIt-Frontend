@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector }    from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchComments, createComment, deleteComment } from '../redux/commentSlice';
-import ConfirmationModal                from './ConfirmationModal';
-import { toast }                        from 'react-toastify';
+import ConfirmationModal from './ConfirmationModal';
+import { toast } from 'react-toastify';
 import './css/CommentsSection.css';
 
 const CommentsSection = ({ postId }) => {
@@ -49,13 +49,7 @@ const CommentsSection = ({ postId }) => {
       <h4>Comments</h4>
       {currentUser ? (
         <form className="comment-form" onSubmit={handleSubmit}>
-          <input
-            className="comment-input"
-            type="text"
-            placeholder="Add a comment…"
-            value={commentText}
-            onChange={e => setCommentText(e.target.value)}
-          />
+          <input className="comment-input" type="text" placeholder="Add a comment…" value={commentText} onChange={e => setCommentText(e.target.value)} />
           <button className="btn submit-btn" type="submit">Send</button>
           {error && <div className="error">{error}</div>}
         </form>
@@ -67,24 +61,15 @@ const CommentsSection = ({ postId }) => {
         {comments.map(c => (
           <li key={c.id} className="comment-item">
             {c.user_avatar && (
-              <img
-                className="comment-avatar"
-                src={c.user_avatar}
-                alt={`${c.user_username}'s avatar`}
-              />
+              <img className="comment-avatar" src={c.user_avatar} alt={'avatar'} />
             )}
             <div className="comment-body">
               <p className="comment-text">{c.content}</p>
               <small className="comment-meta">By {c.user_username}</small>
             </div>
             {(currentUser?.role === 'Admin' || currentUser?.id === c.user_id) && (
-              <>
-                <button
-                  className="btn delete-comment-btn"
-                  onClick={() => setConfirmId(c.id)}
-                >
-                  Delete
-                </button>
+              <div>
+                <button className="btn delete-comment-btn" onClick={() => setConfirmId(c.id)} >Delete</button>
                 <ConfirmationModal
                   isOpen={confirmId === c.id}
                   title="Delete comment?"
@@ -93,9 +78,8 @@ const CommentsSection = ({ postId }) => {
                   onConfirm={() => {
                     handleDelete(c.id);
                     setConfirmId(null);
-                  }}
-                />
-              </>
+                  }} />
+              </div>
             )}
           </li>
         ))}

@@ -9,7 +9,6 @@
   color: #e0e0e0;
 }
 
-/* ===== VIEW MODE ===== */
 
 .detail-header {
   display: flex;
@@ -95,7 +94,7 @@
   font-size: 1rem;
 }
 
-/* gallery row */
+
 .images-row {
   display: flex;
   flex-wrap: wrap;
@@ -103,7 +102,7 @@
   margin-bottom: 16px;
 }
 
-/* each image */
+
 .detail-image {
   flex: 1 1 calc(50% - 12px);
   max-height: 300px;
@@ -114,7 +113,7 @@
   border: 1px solid #444;
 }
 
-/* footer: likes */
+
 .detail-footer {
   display: flex;
   align-items: center;
@@ -146,7 +145,6 @@
   color: #ccc;
 }
 
-/* ===== EDIT MODE ===== */
 
 .edit-form input,
 .edit-form textarea,

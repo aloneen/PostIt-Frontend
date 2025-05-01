@@ -77,8 +77,7 @@ const PostCard = ({ post }) => {
         onConfirm={() => {
           setConfirmOpen(false);
           handleDelete();
-        }}
-      />
+        }} />
     </>
   );
 };

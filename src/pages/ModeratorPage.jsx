@@ -66,13 +66,7 @@ const ModeratorPage = () => {
         {catError && <p style={{ color: 'red' }}>{catError}</p>}
 
         <form onSubmit={handleCreateCategory}className="manage-categories-form">
-          <input
-            type="text"
-            placeholder="New category name"
-            value={newCatName}
-            onChange={(e) => setNewCatName(e.target.value)}
-            required
-          />
+          <input type="text" placeholder="New category name" value={newCatName} onChange={(e) => setNewCatName(e.target.value)} required/>
           <button type="submit">Create</button>
         </form>
 
@@ -81,22 +75,14 @@ const ModeratorPage = () => {
         ) : categories.length > 0 ? (
           <ul>
             {categories.map((cat) => (
-              <li
-                key={cat.id}
-                style={{
+              <li key={cat.id} style={{
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   padding: '12px',
-                }}
-              >
+                }}>
                 {cat.name}
-                <button
-                  onClick={() => setConfirmDelete(true)}
-                  style={{ color: 'white' }}
-                >
-                  Delete
-                </button>
+                <button onClick={() => setConfirmDelete(true)} style={{ color: 'white' }}>Delete</button>
 
                 <ConfirmationModal
                   isOpen={confirmDelete}
@@ -106,8 +92,7 @@ const ModeratorPage = () => {
                   onConfirm={() => {
                     setConfirmDelete(false);
                     handleDeleteCategory(cat.id);
-                  }}
-                />
+                  }} />
               </li>
             ))}
           </ul>
@@ -131,12 +116,7 @@ const ModeratorPage = () => {
                   {new Date(c.created_at).toLocaleString()}
                 </small>
                 <br />
-                <button
-                  onClick={() => setConfirmDeleteComment(true)}
-                  style={{ marginTop: '5px', color: 'white' }}
-                >
-                  Delete
-                </button>
+                <button onClick={() => setConfirmDeleteComment(true)} style={{ marginTop: '5px', color: 'white' }}>Delete</button>
 
                 <ConfirmationModal
                   isOpen={confirmDeleteComment}

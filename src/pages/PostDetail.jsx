@@ -23,22 +23,22 @@ const PostDetail = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { posts, status }        = useSelector(s => s.posts);
-  const { categories, loading }  = useSelector(s => s.categories);
-  const { currentUser }          = useSelector(s => s.user);
-  const likeEntry                = useSelector(s => s.likes.byPost[id]) || { count: 0, liked: false };
-  const post                     = posts.find(p => p.id.toString() === id);
+  const { posts, status } = useSelector(s => s.posts);
+  const { categories, loading } = useSelector(s => s.categories);
+  const { currentUser } = useSelector(s => s.user);
+  const likeEntry = useSelector(s => s.likes.byPost[id]) || { count: 0, liked: false };
+  const post = posts.find(p => p.id.toString() === id);
 
   // local state
-  const [isEditing, setIsEditing]           = useState(false);
-  const [title, setTitle]                   = useState('');
-  const [content, setContent]               = useState('');
-  const [category, setCategory]             = useState('');
-  const [filesToAdd, setFilesToAdd]         = useState([]);
-  const [error, setError]                   = useState(null);
-  const [menuOpen, setMenuOpen]             = useState(false);
-  const [confirmDelete, setConfirmDelete]   = useState(false);
-  const menuRef                              = useRef();
+  const [isEditing, setIsEditing] = useState(false);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [category, setCategory] = useState('');
+  const [filesToAdd, setFilesToAdd] = useState([]);
+  const [error, setError] = useState(null);
+  const [menuOpen, setMenuOpen]  = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const menuRef = useRef();
 
   // on mount: fetch posts, likes, categories
   useEffect(() => {
@@ -128,24 +128,9 @@ const PostDetail = () => {
     <div className="page post-detail">
       {isEditing ? (
         <form className="edit-form" onSubmit={handleEditSubmit}>
-          <input
-            type="text"
-            value={title}
-            onChange={e => setTitle(e.target.value)}
-            placeholder="Title"
-            required
-          />
-          <textarea
-            value={content}
-            onChange={e => setContent(e.target.value)}
-            placeholder="Content"
-            required
-          />
-          <select
-            value={category}
-            onChange={e => setCategory(e.target.value)}
-            required
-          >
+          <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Title" required />
+          <textarea value={content} onChange={e => setContent(e.target.value)} placeholder="Content" required />
+          <select value={category} onChange={e => setCategory(e.target.value)} required>
             <option value="">Select category</option>
             {loading
               ? <option>Loading…</option>
@@ -154,32 +139,19 @@ const PostDetail = () => {
                 ))
             }
           </select>
-          <input
-            type="file"
-            multiple
-            accept="image/*"
-            onChange={e => setFilesToAdd(f => [...f, ...Array.from(e.target.files)])}
-          />
+          <input type="file" multiple accept="image/*" onChange={e => setFilesToAdd(f => [...f, ...Array.from(e.target.files)])}/>
           <div className="existing-images">
             {post.images.map(img => (
               <div className="img-thumb" key={img.id}>
                 <img src={img.url} alt="" />
-                <button
-                  type="button"
-                  className="remove-img"
-                  onClick={() => handleImageDelete(img.id)}
-                >×</button>
+                <button type="button" className="remove-img" onClick={() => handleImageDelete(img.id)}>×</button>
               </div>
             ))}
           </div>
           {error && <p className="error">{error}</p>}
           <div className="form-buttons">
             <button type="submit" className="btn save">Save</button>
-            <button
-              type="button"
-              className="btn cancel"
-              onClick={() => setIsEditing(false)}
-            >Cancel</button>
+            <button type="button" className="btn cancel" onClick={() => setIsEditing(false)} >Cancel</button>
           </div>
         </form>
       ) : (
@@ -193,10 +165,7 @@ const PostDetail = () => {
             </div>
             {currentUser?.id === post.user_id && (
               <div className="menu-container" ref={menuRef}>
-                <button
-                  className="menu-btn"
-                  onClick={e => { e.stopPropagation(); setMenuOpen(o => !o); }}
-                >
+                <button className="menu-btn" onClick={e => { e.stopPropagation(); setMenuOpen(o => !o); }}>
                   <FaEllipsisV />
                 </button>
                 {menuOpen && (
@@ -239,8 +208,7 @@ const PostDetail = () => {
             title="Delete this post?"
             message="This action cannot be undone."
             onCancel={() => setConfirmDelete(false)}
-            onConfirm={() => { setConfirmDelete(false); handleDelete(); }}
-          />
+            onConfirm={() => { setConfirmDelete(false); handleDelete(); }} />
         </>
       )}
     </div>

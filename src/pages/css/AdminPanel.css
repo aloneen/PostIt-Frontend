@@ -1,6 +1,6 @@
 /* Shared styles for AdminPanel and ModeratorPage */
 
-/* General container styles */
+
 .admin-panel, .moderator-page {
   max-width: 1200px;
   margin: 0 auto;
@@ -12,7 +12,7 @@
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-/* Headings */
+
 h2, h3 {
   color: #ffffff;
   margin-bottom: 1rem;
@@ -28,7 +28,6 @@ h3 {
   font-weight: 600;
 }
 
-/* Lists */
 ul {
   list-style: none;
   padding: 0;
@@ -169,8 +168,8 @@ button[type="submit"] {
   gap: 10px;
   flex-wrap: nowrap;
   margin-bottom: 1.5rem;
-  width: 100%; /* Match the width of the categories list */
-  max-width: 100%; /* Ensure it doesn't exceed the parent container */
+  width: 100%; 
+  max-width: 100%; 
 }
 
 .category-form input[type="text"],
@@ -224,7 +223,7 @@ button[type="submit"] {
   border: 1px solid #444;
   border-radius: 6px;
   margin-bottom: 0.5rem;
-  width: 100%; /* Ensure list items take full width */
+  width: 100%; 
   box-sizing: border-box;
 }
 
@@ -270,11 +269,11 @@ button[type="submit"] {
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-word;
-  white-space: pre-wrap; /* preserve newlines if any */
+  white-space: pre-wrap;
 }
 
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
   .category-form {
     flex-wrap: wrap;

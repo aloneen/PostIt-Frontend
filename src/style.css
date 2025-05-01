@@ -1,4 +1,3 @@
-/* RESET */
 * {
   margin: 0;
   padding: 0;
@@ -22,65 +21,6 @@ body {
   /* background-color: #1e1e1e;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); */
-}
-
-/* NAVBAR */
-.navbar {
-  background: #000;
-  padding: 35px 40px;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  align-items: center;
-  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.05);
-}
-
-.navbar a {
-  color: #e0e0e0;
-  text-decoration: none;
-  margin-right: 15px;
-  font-size: 1rem;
-}
-
-.navbar a:hover {
-  color: #ff6f61;
-}
-
-.navbar-brand a {
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.navbar-toggle {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.navbar-links {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.navbar-links.active {
-  display: flex;
-}
-
-.navbar-links button {
-  background: #ff6f61;
-  color: #fff;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  margin-left: 10px;
-  cursor: pointer;
-}
-
-.navbar-links button:hover {
-  background: #e55b4d;
 }
 
 /* HEADINGS & TEXT */
